@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use App\Models\CreatorProfile;
 use App\Models\ViewerProfile;
+use App\Enums\UserRole;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
@@ -19,13 +20,55 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = [
+    'name',
+    'username',
+    'email',
+    'password',
+    'role',
+    'region',
+    'language',
+];
     protected $hidden = ['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'];
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'two_factor_confirmed_at' => 'datetime',
     ];
+
+    protected static function booted(): void
+{
+    static::created(function ($user) {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Create Viewer Profile
+        |--------------------------------------------------------------------------
+        */
+
+        ViewerProfile::create([
+            'user_id' => $user->id,
+            'preferred_region' => $user->region,
+            'preferred_language' => $user->language,
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Create Creator Profile
+        |--------------------------------------------------------------------------
+        */
+
+        if ($user->role === UserRole::CREATOR->value) {
+
+            CreatorProfile::create([
+                'user_id' => $user->id,
+                'display_name' => $user->name,
+            ]);
+
+        }
+
+    });
+}
 
     public function creatorProfile()
 {

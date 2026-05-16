@@ -16,9 +16,44 @@ trait ProfileValidationRules
     protected function profileRules(?int $userId = null): array
     {
         return [
-            'name' => $this->nameRules(),
-            'email' => $this->emailRules($userId),
-        ];
+    'name' => [
+        'required',
+        'string',
+        'max:255',
+    ],
+
+    'username' => [
+        'required',
+        'string',
+        'max:255',
+        'unique:users',
+    ],
+
+    'email' => [
+        'required',
+        'string',
+        'email',
+        'max:255',
+        'unique:users',
+    ],
+
+    'role' => [
+        'required',
+        'in:viewer,creator',
+    ],
+
+    'region' => [
+        'nullable',
+        'string',
+        'max:255',
+    ],
+
+    'language' => [
+        'nullable',
+        'string',
+        'max:255',
+    ],
+];
     }
 
     /**
