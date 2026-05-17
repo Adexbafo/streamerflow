@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use App\Http\Controllers\Creator\VideoController;
 
 Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
@@ -28,6 +29,21 @@ Route::middleware(['auth'])->group(function () {
     */
 
     Route::middleware(['role:creator'])->group(function () {
+
+        Route::get('/creator/videos', [
+    VideoController::class,
+    'index'
+])->name('creator.videos.index');
+
+Route::get('/creator/videos/create', [
+    VideoController::class,
+    'create'
+])->name('creator.videos.create');
+
+Route::post('/creator/videos', [
+    VideoController::class,
+    'store'
+])->name('creator.videos.store');
 
         Route::get('/creator/dashboard', function () {
             return inertia('Creator/Dashboard');
