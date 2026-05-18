@@ -21,51 +21,71 @@ export default function AppLayout({
                     StreamerFlow
                 </h1>
 
-                <nav className="space-y-4">
+                <nav className="space-y-6">
 
-                    <Link
-                        href="/"
-                        className="block hover:text-blue-500"
-                    >
-                        Home
-                    </Link>
+    <Link
+        href="/"
+        className="block hover:text-blue-500"
+    >
+        Home
+    </Link>
 
-                    <Link
-                        href="/trending"
-                        className="block hover:text-blue-500"
-                    >
-                        Trending
-                    </Link>
+    <Link
+        href="/trending"
+        className="block hover:text-blue-500"
+    >
+        Trending
+    </Link>
 
-                    <Link
-                        href="/search"
-                        className="block hover:text-blue-500"
-                    >
-                        Search
-                    </Link>
+    <Link
+        href="/search"
+        className="block hover:text-blue-500"
+    >
+        Search
+    </Link>
 
-                    <Link
-                        href="/notifications"
-                        className="block hover:text-blue-500"
-                    >
-                        Notifications
-                    </Link>
+    {auth?.user ? (
+        <>
+            <Link
+                href="/notifications"
+                className="block hover:text-blue-500"
+            >
+                Notifications
+            </Link>
 
-                    <Link
-                        href="/saved-videos"
-                        className="block hover:text-blue-500"
-                    >
-                        Saved Videos
-                    </Link>
+            <Link
+                href="/saved-videos"
+                className="block hover:text-blue-500"
+            >
+                Saved Videos
+            </Link>
 
-                    <Link
-                        href={`/channels/${auth.user.username}`}
-                        className="block hover:text-blue-500"
-                    >
-                        My Channel
-                    </Link>
+            <Link
+                href={`/channels/${auth.user.username}`}
+                className="block hover:text-blue-500"
+            >
+                My Channel
+            </Link>
+        </>
+    ) : (
+        <>
+            <Link
+                href="/login"
+                className="block hover:text-blue-500"
+            >
+                Login
+            </Link>
 
-                </nav>
+            <Link
+                href="/register"
+                className="block hover:text-blue-500"
+            >
+                Register
+            </Link>
+        </>
+    )}
+
+</nav>
 
             </aside>
 

@@ -13,10 +13,15 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SavedVideoController;
 use App\Http\Controllers\NotificationController;
 
-Route::get('/', [
-    HomeController::class,
-    'index',
-])->name('home');
+Route::get('/', function () {
+
+    if (auth()->check()) {
+        return app(HomeController::class)->index();
+    }
+
+    return inertia('welcome');
+
+})->name('home');
 
 Route::get('/trending', [
     TrendingController::class,
@@ -51,16 +56,8 @@ Route::post('/videos/{video}/like', [
 ])->name('videos.like');
 
     Route::get('/dashboard', function () {
-
-        $user = auth()->user();
-
-        return match ($user->role) {
-            'admin' => redirect('/admin/dashboard'),
-            'creator' => redirect('/creator/dashboard'),
-            default => redirect('/viewer/dashboard'),
-        };
-
-    })->name('dashboard');
+    return redirect('/');
+})->middleware(['auth'])->name('dashboard');
 
     Route::post('/channels/{user}/follow', [
     FollowController::class,
