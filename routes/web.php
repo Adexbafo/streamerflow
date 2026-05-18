@@ -3,10 +3,16 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\Creator\VideoController;
+use App\Http\Controllers\VideoWatchController;
 
 Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
+
+Route::get('/videos/{video:slug}', [
+    VideoWatchController::class,
+    'show',
+])->name('videos.show');
 
 Route::middleware(['auth'])->group(function () {
 
