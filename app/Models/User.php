@@ -84,4 +84,29 @@ class User extends Authenticatable
 {
     return $this->hasOne(ViewerProfile::class);
 }
+public function comments()
+{
+    return $this->hasMany(Comment::class);
+}
+public function likes()
+{
+    return $this->hasMany(Like::class);
+}
+public function followers()
+{
+    return $this->hasMany(Follow::class, 'following_id');
+}
+
+public function following()
+{
+    return $this->hasMany(Follow::class, 'follower_id');
+}
+public function watchHistory()
+{
+    return $this->hasMany(WatchHistory::class);
+}
+public function savedVideos()
+{
+    return $this->hasMany(SavedVideo::class);
+}
 }

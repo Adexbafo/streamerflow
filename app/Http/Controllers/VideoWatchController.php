@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use Inertia\Inertia;
+use App\Models\WatchHistory;
 
 class VideoWatchController extends Controller
 {
@@ -20,6 +21,23 @@ class VideoWatchController extends Controller
 
         $video->increment('views_count');
 
+        if (auth()->check()) {
+
+    WatchHistory::updateOrCreate(
+
+        [
+            'user_id' => auth()->id(),
+            'video_id' => $video->id,
+        ],
+
+        [
+            'watched_at' => now(),
+        ]
+
+    );
+
+}
+
         /*
         |--------------------------------------------------------------------------
         | Load Relationships
@@ -29,6 +47,9 @@ class VideoWatchController extends Controller
         $video->load([
             'user',
             'category',
+            'comments.user',
+            'likes',
+            'savedByUsers',
         ]);
 
         return Inertia::render('Videos/Show', [

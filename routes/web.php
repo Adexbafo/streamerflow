@@ -1,13 +1,37 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
 use App\Http\Controllers\Creator\VideoController;
 use App\Http\Controllers\VideoWatchController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ChannelController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\TrendingController;
+use App\Http\Controllers\FollowController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SavedVideoController;
+use App\Http\Controllers\NotificationController;
 
-Route::inertia('/', 'welcome', [
-    'canRegister' => Features::enabled(Features::registration()),
+Route::get('/', [
+    HomeController::class,
+    'index',
 ])->name('home');
+
+Route::get('/trending', [
+    TrendingController::class,
+    'index',
+])->name('trending');
+
+Route::get('/search', [
+    SearchController::class,
+    'index',
+])->name('search');
+
+Route::get('/channels/{user:username}', [
+    ChannelController::class,
+    'show',
+])->name('channels.show');
 
 Route::get('/videos/{video:slug}', [
     VideoWatchController::class,
@@ -15,6 +39,16 @@ Route::get('/videos/{video:slug}', [
 ])->name('videos.show');
 
 Route::middleware(['auth'])->group(function () {
+
+    Route::post('/videos/{video}/comments', [
+    CommentController::class,
+    'store',
+])->name('comments.store');
+
+Route::post('/videos/{video}/like', [
+    LikeController::class,
+    'toggle',
+])->name('videos.like');
 
     Route::get('/dashboard', function () {
 
@@ -27,6 +61,26 @@ Route::middleware(['auth'])->group(function () {
         };
 
     })->name('dashboard');
+
+    Route::post('/channels/{user}/follow', [
+    FollowController::class,
+    'toggle',
+])->name('channels.follow');
+
+Route::post('/videos/{video}/save', [
+    SavedVideoController::class,
+    'toggle',
+])->name('videos.save');
+
+Route::get('/saved-videos', [
+    SavedVideoController::class,
+    'index',
+])->name('saved-videos.index');
+
+Route::get('/notifications', [
+    NotificationController::class,
+    'index',
+])->name('notifications.index');
 
     /*
     |--------------------------------------------------------------------------

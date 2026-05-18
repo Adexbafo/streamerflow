@@ -45,4 +45,21 @@ class Video extends Model
 {
     return $this->belongsTo(Category::class);
 }
+
+    public function comments()
+{
+    return $this->hasMany(Comment::class);
+}
+public function likes()
+{
+    return $this->hasMany(Like::class);
+}
+public function watchHistory()
+{
+    return $this->hasMany(WatchHistory::class);
+}
+public function savedByUsers()
+{
+    return $this->hasMany(SavedVideo::class);
+}
 }
