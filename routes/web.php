@@ -122,6 +122,12 @@ Route::post('/creator/videos', [
 
     });
 
+        Route::get('/streams/demo', function () {
+    return inertia('Streams/Show');
+});
+
+
+
     /*
     |--------------------------------------------------------------------------
     | Admin Dashboard

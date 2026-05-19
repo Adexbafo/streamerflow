@@ -17,43 +17,64 @@ export default function AppLayout({
 
             {/* Sidebar */}
 
-            <div className="space-y-2 mt-8">
+<div className="hidden lg:flex lg:w-64 border-r bg-white flex-col p-6">
 
-    <SidebarLink
-        href="/"
-        label="Home"
-    />
+    <div className="text-2xl font-bold mb-10">
+        StreamerFlow
+    </div>
 
-    <SidebarLink
-        href="/trending"
-        label="Trending"
-    />
+    <div className="space-y-2">
 
-    <SidebarLink
-        href="/search"
-        label="Search"
-    />
+        <SidebarLink
+            href="/"
+            label="Home"
+        />
 
-    <SidebarLink
-        href="/notifications"
-        label="Notifications"
-    />
+        <SidebarLink
+            href="/trending"
+            label="Trending"
+        />
 
-    <SidebarLink
-        href="/saved-videos"
-        label="Saved Videos"
-    />
+        <SidebarLink
+            href="/search"
+            label="Search"
+        />
 
-    <SidebarLink
-        href={`/channels/${auth.user.username}`}
-        label="My Channel"
-    />
+        <SidebarLink
+            href="/notifications"
+            label="Notifications"
+        />
+
+        <SidebarLink
+            href="/saved-videos"
+            label="Saved Videos"
+        />
+
+        <SidebarLink
+            href={`/channels/${auth.user.username}`}
+            label="My Channel"
+        />
+
+    </div>
 
 </div>
             
             {/* Main Content */}
             {/* Topbar */}
         <div className="flex-1">
+        {/* Mobile Navigation */}
+
+<div className="lg:hidden flex items-center justify-between p-4 border-b bg-white sticky top-0 z-50">
+
+    <div className="text-xl font-bold">
+        StreamerFlow
+    </div>
+
+    <button className="border px-4 py-2 rounded-xl">
+        ☰
+    </button>
+
+</div>            
             <Topbar />
 
             <main className="flex-1 p-8">
