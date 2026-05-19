@@ -1,98 +1,69 @@
-import { Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/AppLayout';
-
-interface Video {
-    id: number;
-    title: string;
-    slug: string;
-    video_path: string;
-    views_count: number;
-    user?: {
-        name: string;
-    };
-    category?: {
-        name: string;
-    };
-}
+import SectionTitle from '@/components/ui/SectionTitle';
+import VideoCard from '@/components/ui/VideoCard';
 
 interface Props {
-    videos: {
-        data: Video[];
-    };
+    videos: any[];
 }
 
-export default function Home({ videos }: Props) {
+export default function Home({
+    videos,
+}: Props) {
 
     return (
-    <AppLayout>
-        <div className="max-w-7xl mx-auto p-6">
+        <AppLayout>
 
-            <h1 className="text-3xl font-bold mb-8">
-                StreamerFlow
-            </h1>
+            <div className="space-y-14">
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Hero Section */}
 
-                {videos.data.length === 0 ? (
+                <section className="bg-gradient-to-r from-black to-gray-800 text-white rounded-3xl p-10">
 
-                    <p>No videos available.</p>
+                    <h1 className="text-5xl font-bold mb-4">
+                        Welcome to StreamerFlow
+                    </h1>
 
-                ) : (
+                    <p className="text-lg text-gray-300 max-w-2xl">
+                        Discover creators, trending streams,
+                        and engaging video content from around the world.
+                    </p>
 
-                    videos.data.map((video) => (
+                </section>
 
-                        <Link
-                            key={video.id}
-                            href={`/videos/${video.slug}`}
-                        >
+                {/* Latest Videos */}
 
-                            <div className="border rounded-lg overflow-hidden hover:shadow-lg transition">
+                <section>
 
-                                <video
-                                    className="w-full h-64 object-cover"
-                                    muted
-                                >
-                                    <source
-                                        src={`/storage/${video.video_path}`}
-                                        type="video/mp4"
-                                    />
-                                </video>
+                    <SectionTitle
+                        title="Latest Videos"
+                        subtitle="Fresh uploads from creators"
+                    />
 
-                                <div className="p-4">
+                    {videos.length === 0 ? (
 
-                                    <h2 className="font-bold text-lg mb-2">
-                                        {video.title}
-                                    </h2>
+                        <div className="text-gray-500">
+                            No videos uploaded yet.
+                        </div>
 
-                                    <p className="text-sm text-gray-500">
-                                        {video.user?.name}
-                                    </p>
+                    ) : (
 
-                                    <div className="flex items-center gap-3 mt-2 text-sm text-gray-400">
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
 
-                                        <span>
-                                            {video.views_count} views
-                                        </span>
+                            {videos.map((video) => (
+                                <VideoCard
+                                    key={video.id}
+                                    video={video}
+                                />
+                            ))}
 
-                                        <span>
-                                            {video.category?.name}
-                                        </span>
+                        </div>
 
-                                    </div>
+                    )}
 
-                                </div>
-
-                            </div>
-
-                        </Link>
-
-                    ))
-
-                )}
+                </section>
 
             </div>
 
-        </div>
         </AppLayout>
-);
+    );
 }

@@ -8,17 +8,13 @@ use Inertia\Inertia;
 class HomeController extends Controller
 {
     /**
-     * Display public homepage feed.
+     * Display homepage videos.
      */
     public function index()
     {
-        $videos = Video::with([
-                'user',
-                'category',
-            ])
-            ->where('visibility', 'public')
+        $videos = Video::with('user')
             ->latest()
-            ->paginate(12);
+            ->get();
 
         return Inertia::render('Home', [
             'videos' => $videos,

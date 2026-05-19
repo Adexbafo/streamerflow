@@ -1,4 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
+import SidebarLink from '@/components/layout/SidebarLink';
+import Topbar from '@/components/layout/Topbar';
 
 interface Props {
     children: React.ReactNode;
@@ -15,87 +17,51 @@ export default function AppLayout({
 
             {/* Sidebar */}
 
-            <aside className="w-64 bg-white border-r min-h-screen p-6">
+            <div className="space-y-2 mt-8">
 
-                <h1 className="text-2xl font-bold mb-10">
-                    StreamerFlow
-                </h1>
-
-                <nav className="space-y-6">
-
-    <Link
+    <SidebarLink
         href="/"
-        className="block hover:text-blue-500"
-    >
-        Home
-    </Link>
+        label="Home"
+    />
 
-    <Link
+    <SidebarLink
         href="/trending"
-        className="block hover:text-blue-500"
-    >
-        Trending
-    </Link>
+        label="Trending"
+    />
 
-    <Link
+    <SidebarLink
         href="/search"
-        className="block hover:text-blue-500"
-    >
-        Search
-    </Link>
+        label="Search"
+    />
 
-    {auth?.user ? (
-        <>
-            <Link
-                href="/notifications"
-                className="block hover:text-blue-500"
-            >
-                Notifications
-            </Link>
+    <SidebarLink
+        href="/notifications"
+        label="Notifications"
+    />
 
-            <Link
-                href="/saved-videos"
-                className="block hover:text-blue-500"
-            >
-                Saved Videos
-            </Link>
+    <SidebarLink
+        href="/saved-videos"
+        label="Saved Videos"
+    />
 
-            <Link
-                href={`/channels/${auth.user.username}`}
-                className="block hover:text-blue-500"
-            >
-                My Channel
-            </Link>
-        </>
-    ) : (
-        <>
-            <Link
-                href="/login"
-                className="block hover:text-blue-500"
-            >
-                Login
-            </Link>
+    <SidebarLink
+        href={`/channels/${auth.user.username}`}
+        label="My Channel"
+    />
 
-            <Link
-                href="/register"
-                className="block hover:text-blue-500"
-            >
-                Register
-            </Link>
-        </>
-    )}
-
-</nav>
-
-            </aside>
-
+</div>
+            
             {/* Main Content */}
+            {/* Topbar */}
+        <div className="flex-1">
+            <Topbar />
 
             <main className="flex-1 p-8">
 
                 {children}
 
             </main>
+        </div>
 
         </div>
     );
