@@ -12,6 +12,7 @@ use App\Http\Controllers\FollowController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SavedVideoController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Creator\StreamController;
 
 Route::get('/', function () {
 
@@ -106,6 +107,20 @@ Route::post('/creator/videos', [
             return inertia('Creator/Dashboard');
         })->name('creator.dashboard');
 
+Route::get('/creator/stream', [
+    StreamController::class,
+    'show',
+])->name('creator.stream');
+
+Route::post('/creator/stream/start', [
+    StreamController::class,
+    'start',
+])->name('creator.stream.start');
+
+Route::post('/creator/stream/end', [
+    StreamController::class,
+    'end',
+])->name('creator.stream.end');
     });
 
     /*
@@ -141,6 +156,8 @@ Route::post('/creator/videos', [
         })->name('admin.dashboard');
 
     });
+
+
 
 });
 

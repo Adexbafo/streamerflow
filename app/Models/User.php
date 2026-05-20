@@ -13,6 +13,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use App\Models\CreatorProfile;
 use App\Models\ViewerProfile;
 use App\Enums\UserRole;
+use App\Models\Stream;
+use Illuminate\Support\Str;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
@@ -67,6 +69,12 @@ class User extends Authenticatable
 
         }
 
+        Stream::create([
+    'user_id' => $user->id,
+    'title' => "{$user->name}'s Stream",
+    'stream_key' => Str::random(40),
+]);
+
     });
 }
 
@@ -108,5 +116,9 @@ public function watchHistory()
 public function savedVideos()
 {
     return $this->hasMany(SavedVideo::class);
+}
+public function stream()
+{
+    return $this->hasOne(Stream::class);
 }
 }
