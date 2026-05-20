@@ -55,6 +55,11 @@ export default function AppLayout({
             label="My Channel"
         />
 
+        <SidebarLink
+    href="/creator/stream"
+    label="Stream Dashboard"
+/>
+
     </div>
 
 </div>
