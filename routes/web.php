@@ -141,6 +141,16 @@ Route::post('/creator/stream/end', [
     return inertia('Streams/Show');
 });
 
+    Route::post('/creator/stream/join', [
+    StreamController::class,
+    'join',
+]);
+
+Route::post('/creator/stream/leave', [
+    StreamController::class,
+    'leave',
+]);
+
 
 
     /*

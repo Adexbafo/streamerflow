@@ -1,5 +1,6 @@
 import AppLayout from '@/layouts/AppLayout';
 import { router } from '@inertiajs/react';
+import { useEffect } from 'react';
 
 interface Props {
     stream: any;
@@ -8,6 +9,23 @@ interface Props {
 export default function StreamDashboard({
     stream,
 }: Props) {
+
+    useEffect(() => {
+
+    (window as any).Echo.channel('streams')
+        .listen('.stream.status.updated', (event: any) => {
+
+            console.log('Realtime Stream Update:', event);
+
+        });
+
+    return () => {
+
+        (window as any).Echo.leave('streams');
+
+    };
+
+}, []);
 
     return (
         <AppLayout>

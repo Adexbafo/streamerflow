@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Creator;
 
 use App\Http\Controllers\Controller;
 use Inertia\Inertia;
+use App\Events\StreamStatusUpdated;
+use App\Events\ViewerCountUpdated;
 
 class StreamController extends Controller
 {
@@ -28,6 +30,8 @@ class StreamController extends Controller
         'started_at' => now(),
     ]);
 
+    StreamStatusUpdated::dispatch($stream);
+
     return back();
 }
 
@@ -40,6 +44,35 @@ public function end()
         'ended_at' => now(),
     ]);
 
+    StreamStatusUpdated::dispatch($stream);
+
     return back();
+}
+public function join()
+{
+    $stream = auth()->user()->stream;
+
+    $stream->increment('viewer_count');
+
+    broadcast(new ViewerCountUpdated($stream))->toOthers();
+
+    return response()->json([
+        'viewer_count' => $stream->viewer_count,
+    ]);
+}
+
+public function leave()
+{
+    $stream = auth()->user()->stream;
+
+    if ($stream->viewer_count > 0) {
+        $stream->decrement('viewer_count');
+    }
+
+    broadcast(new ViewerCountUpdated($stream))->toOthers();
+
+    return response()->json([
+        'viewer_count' => $stream->viewer_count,
+    ]);
 }
 }

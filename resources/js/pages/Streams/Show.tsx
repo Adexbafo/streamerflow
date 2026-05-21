@@ -1,6 +1,31 @@
 import AppLayout from '@/layouts/AppLayout';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function Show() {
+    const [viewerCount, setViewerCount] = useState(2431);
+          useEffect(() => {
+
+    axios.post('/creator/stream/join');
+
+    (window as any).Echo.channel('streams')
+        .listen('.viewer.count.updated', (event: any) => {
+
+            setViewerCount(event.stream.viewer_count);
+
+            console.log('Viewer Count Updated:', event);
+
+        });
+
+    return () => {
+
+        axios.post('/creator/stream/leave');
+
+        (window as any).Echo.leave('streams');
+
+    };
+
+}, []);
     return (
         <AppLayout>
 
@@ -26,8 +51,7 @@ export default function Show() {
 
     <div className="absolute inset-0 flex items-center justify-center translate-y-6">
 
-        <p className="text-white text-2xl font-bold">
-            <div className="flex flex-col items-center justify-center h-full text-white">
+        <div className="flex flex-col items-center justify-center h-full text-white">
 
     <div className="text-3xl font-bold mb-4">
         Stream Player
@@ -54,7 +78,6 @@ export default function Show() {
     </div>
 
 </div>
-        </p>
 
     </div>
 
@@ -75,9 +98,8 @@ export default function Show() {
                             </span>
 
                             <span>
-                                2,431 watching
+                                {viewerCount} watching
                             </span>
-
                             <span>
                                 Gaming
                             </span>
