@@ -2,30 +2,151 @@ import AppLayout from '@/layouts/AppLayout';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+
 export default function Show() {
+
     const [viewerCount, setViewerCount] = useState(2431);
-          useEffect(() => {
 
-    axios.post('/creator/stream/join');
+    const [messages, setMessages] = useState<any[]>([]);
 
-    (window as any).Echo.channel('streams')
-        .listen('.viewer.count.updated', (event: any) => {
+    const [chatMessage, setChatMessage] = useState('');
+    const [viewers, setViewers] = useState<any[]>([]);
+    const [activities, setActivities] = useState<any[]>([]);
+    const [typingUsers, setTypingUsers] = useState<string[]>([]);
 
-            setViewerCount(event.stream.viewer_count);
+    const sendMessage = async () => {
 
-            console.log('Viewer Count Updated:', event);
+        if (!chatMessage.trim()) return;
 
-        });
+        try {
 
-    return () => {
+            const response = await axios.post('/chat/send', {
+                message: chatMessage,
+            });
 
-        axios.post('/creator/stream/leave');
+            setMessages((prev) => [
+                ...prev,
+                response.data.message,
+            ]);
 
-        (window as any).Echo.leave('streams');
+            setChatMessage('');
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
 
     };
 
-}, []);
+    useEffect(() => {
+
+        axios.post('/creator/stream/join');
+
+        axios.get('/streams/1/messages')
+            .then((response) => {
+
+                setMessages(response.data);
+
+            });
+
+        (window as any).Echo.join('stream.1')
+
+            .here((users: any) => {
+
+                setViewerCount(users.length);
+
+                setViewers(users);
+
+            })
+
+            .joining((user: any) => {
+
+                setViewerCount((prev: number) => prev + 1);
+                setViewers((prev) => [...prev, user]);
+
+                setActivities((prev) => [
+
+    ...prev,
+
+    {
+        type: 'join',
+        user: user.name,
+    },
+
+]);
+
+                console.log(user.name + ' joined');
+
+            })
+
+            .leaving((user: any) => {
+
+                setViewerCount((prev: number) => prev - 1);
+
+                setViewers((prev) =>
+    prev.filter((viewer) => viewer.id !== user.id)
+);
+
+        setActivities((prev) => [
+
+    ...prev,
+
+    {
+        type: 'leave',
+        user: user.name,
+    },
+
+]);
+
+                console.log(user.name + ' left');
+
+            })
+
+            .listen('ViewerCountUpdated', (e: any) => {
+
+                setViewerCount(e.viewerCount);
+
+            })
+
+            .listen('ChatMessageSent', (e: any) => {
+
+                setMessages((prev) => [
+                    ...prev,
+                    e.message,
+                ]);
+
+            })
+
+            .listenForWhisper('typing', (e: any) => {
+
+    setTypingUsers((prev) => {
+
+        if (prev.includes(e.user)) {
+            return prev;
+        }
+
+        return [...prev, e.user];
+
+    });
+
+    setTimeout(() => {
+
+        setTypingUsers((prev) =>
+            prev.filter((user) => user !== e.user)
+        );
+
+    }, 2000);
+
+})
+
+        return () => {
+
+            (window as any).Echo.leave('stream.1');
+
+        };
+
+    }, []);
     return (
         <AppLayout>
 
@@ -201,82 +322,188 @@ export default function Show() {
 
                 {/* Live Chat Sidebar */}
 
-                <div className="2xl:col-span-4">
+<div className="2xl:col-span-4">
 
-                    <div className="border border-gray-200 rounded-3xl h-[80vh] flex flex-col bg-white shadow-sm sticky top-6">
+    <div className="border border-gray-200 rounded-3xl h-[80vh] flex flex-col bg-white shadow-sm sticky top-6">
 
-                        {/* Chat Header */}
+        {/* Chat Header */}
 
-                        <div className="p-4 border-b font-bold">
+        <div className="p-4 border-b font-bold">
 
-                            Live Chat
+            Live Chat
 
-                        </div>
+        </div>
 
-                        {/* Chat Messages */}
+        {/* Online Viewers */}
 
-                        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+        <div className="p-4 border-b">
 
-                            <div className="bg-white rounded-2xl p-3 shadow-sm">
+            <h3 className="font-bold mb-3">
+                Online Viewers
+            </h3>
 
-    <div className="flex items-center gap-2 mb-1">
+            <div className="space-y-2">
 
-        <span className="font-bold text-sm">
-            viewer01
-        </span>
+                {viewers.map((viewer, index) => (
 
-        <span className="text-xs text-gray-400">
-            just now
-        </span>
+                    <div
+                        key={index}
+                        className="
+                            flex
+                            items-center
+                            justify-between
+                            text-sm
+                            bg-gray-50
+                            rounded-xl
+                            px-3
+                            py-2
+                        "
+                    >
 
-    </div>
+                        <span>
+                            {viewer.name}
+                        </span>
 
-    <p className="text-sm text-gray-700">
-        This UI looks clean 🔥
-    </p>
-
-</div>
-
-                            <div className="bg-white rounded-2xl p-3 shadow-sm">
-
-    <div className="flex items-center gap-2 mb-1">
-
-        <span className="font-bold text-sm">
-            devguy
-        </span>
-
-        <span className="text-xs text-gray-400">
-            2m ago
-        </span>
-
-    </div>
-
-    <p className="text-sm text-gray-700">
-        StreamerFlow is evolving fast.
-    </p>
-
-</div>
-
-                        </div>
-
-                        {/* Chat Input */}
-
-                        <div className="p-4 border-t">
-
-                            <input
-                                type="text"
-                                placeholder="Send a message..."
-                                className="w-full border rounded-xl px-4 py-3"
-                            />
-
-                        </div>
+                        <span className="text-green-500">
+                            ●
+                        </span>
 
                     </div>
 
-                </div>
+                ))}
 
             </div>
 
+        </div>
+
+        {/* Live Activity */}
+
+        <div className="p-4 border-b">
+
+            <h3 className="font-bold mb-3">
+                Live Activity
+            </h3>
+
+            <div className="space-y-2">
+
+                {activities.map((activity, index) => (
+
+                    <div
+                        key={index}
+                        className="
+                            text-sm
+                            text-gray-600
+                            bg-gray-50
+                            rounded-xl
+                            px-3
+                            py-2
+                        "
+                    >
+
+                        {activity.user}{' '}
+
+                        {activity.type === 'join'
+                            ? 'joined the stream'
+                            : 'left the stream'}
+
+                    </div>
+
+                ))}
+
+            </div>
+
+        </div>
+
+        {/* Chat Messages */}
+
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+
+            {messages.map((message, index) => (
+
+                <div
+                    key={index}
+                    className="bg-white rounded-2xl p-3 shadow-sm"
+                >
+
+                    <div className="flex items-center gap-2 mb-1">
+
+                        <span className="font-bold text-sm">
+                            {message.user}
+                        </span>
+
+                        <span className="text-xs text-gray-400">
+                            {message.time}
+                        </span>
+
+                    </div>
+
+                    <p className="text-sm text-gray-700">
+                        {message.message}
+                    </p>
+
+                </div>
+
+            ))}
+
+        </div>
+
+        {typingUsers.length > 0 && (
+
+    <div className="px-4 py-2 text-sm text-gray-500 italic">
+
+        {typingUsers.join(', ')}
+
+        {' '}is typing...
+
+    </div>
+
+)}
+
+        {/* Chat Input */}
+
+        <div className="p-4 border-t">
+
+            <div className="flex gap-2">
+
+                <input
+                    type="text"
+                    value={chatMessage}
+                    onChange={(e) => {
+
+                        setChatMessage(e.target.value);
+
+                        (window as any).Echo
+                            .join('stream.1')
+                            .whisper('typing', {
+                            user: viewers[0]?.name || 'Viewer',
+});
+
+}}
+                />
+
+                <button
+                    onClick={sendMessage}
+                    className="
+                        bg-black
+                        text-white
+                        px-5
+                        rounded-2xl
+                        font-semibold
+                    "
+                >
+
+                    Send
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
         </AppLayout>
     );
 }

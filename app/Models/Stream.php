@@ -22,4 +22,9 @@ class Stream extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function chatMessages()
+{
+    return $this->hasMany(ChatMessage::class);
+}
 }

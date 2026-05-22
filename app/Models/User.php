@@ -121,4 +121,8 @@ public function stream()
 {
     return $this->hasOne(Stream::class);
 }
+public function chatMessages()
+{
+    return $this->hasMany(ChatMessage::class);
+}
 }

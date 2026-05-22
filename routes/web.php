@@ -13,6 +13,8 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SavedVideoController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Creator\StreamController;
+use App\Http\Controllers\ChatController;
+use App\Models\Stream;
 
 Route::get('/', function () {
 
@@ -51,6 +53,11 @@ Route::middleware(['auth'])->group(function () {
     'store',
 ])->name('comments.store');
 
+Route::post('/chat/send', [
+    ChatController::class,
+    'store',
+]);
+
 Route::post('/videos/{video}/like', [
     LikeController::class,
     'toggle',
@@ -79,6 +86,27 @@ Route::get('/notifications', [
     NotificationController::class,
     'index',
 ])->name('notifications.index');
+
+Route::get('/streams/{stream}/messages', function (Stream $stream) {
+
+    return $stream->chatMessages()
+        ->latest()
+        ->take(50)
+        ->with('user')
+        ->get()
+        ->reverse()
+        ->values()
+        ->map(function ($message) {
+
+            return [
+                'user' => $message->user->username,
+                'message' => $message->message,
+                'time' => $message->created_at->format('H:i'),
+            ];
+
+        });
+
+});
 
     /*
     |--------------------------------------------------------------------------

@@ -2,32 +2,29 @@
 
 namespace App\Events;
 
-use App\Models\Stream;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ViewerCountUpdated implements ShouldBroadcast
+class ChatMessageSent implements ShouldBroadcast
 {
     use Dispatchable, SerializesModels;
 
-    public Stream $stream;
+    public array $message;
 
-    public function __construct(Stream $stream)
+    public function __construct(array $message)
     {
-        $this->stream = $stream;
+        $this->message = $message;
     }
 
     public function broadcastOn(): array
     {
-        return [
-            new PresenceChannel('stream.1'),
-        ];
+        return [new PresenceChannel('stream.1')];
     }
 
     public function broadcastAs(): string
     {
-        return 'viewer.count.updated';
+        return 'chat.message.sent';
     }
 }
