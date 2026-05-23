@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Inertia\Inertia;
 use App\Events\StreamStatusUpdated;
 use App\Events\ViewerCountUpdated;
+use Illuminate\Http\Request;
 
 class StreamController extends Controller
 {
@@ -45,6 +46,24 @@ public function end()
     ]);
 
     StreamStatusUpdated::dispatch($stream);
+
+    return back();
+}
+public function update(Request $request)
+{
+    $request->validate([
+        'title' => ['required', 'string', 'max:255'],
+        'category' => ['required', 'string', 'max:255'],
+        'description' => ['nullable', 'string'],
+    ]);
+
+    $stream = auth()->user()->stream;
+
+    $stream->update([
+        'title' => $request->title,
+        'category' => $request->category,
+        'description' => $request->description,
+    ]);
 
     return back();
 }

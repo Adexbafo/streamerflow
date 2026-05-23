@@ -130,7 +130,10 @@ Route::post('/creator/videos', [
     VideoController::class,
     'store'
 ])->name('creator.videos.store');
-
+Route::put('/creator/stream', [
+    StreamController::class,
+    'update',
+])->name('creator.stream.update');
         Route::get('/creator/dashboard', function () {
             return inertia('Creator/Dashboard');
         })->name('creator.dashboard');

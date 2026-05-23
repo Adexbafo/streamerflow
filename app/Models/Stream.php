@@ -9,13 +9,19 @@ class Stream extends Model
     protected $fillable = [
         'user_id',
         'title',
+        'slug',
         'description',
-        'stream_key',
-        'status',
         'category',
+        'thumbnail',
+        'status',
         'viewer_count',
         'started_at',
         'ended_at',
+    ];
+
+    protected $casts = [
+        'started_at' => 'datetime',
+        'ended_at' => 'datetime',
     ];
 
     public function user()
@@ -24,7 +30,7 @@ class Stream extends Model
     }
 
     public function chatMessages()
-{
-    return $this->hasMany(ChatMessage::class);
-}
+    {
+        return $this->hasMany(ChatMessage::class);
+    }
 }

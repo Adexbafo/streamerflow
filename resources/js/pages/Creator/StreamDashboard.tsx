@@ -1,5 +1,6 @@
 import AppLayout from '@/layouts/AppLayout';
 import { router } from '@inertiajs/react';
+import { useState } from 'react';
 import { useEffect } from 'react';
 
 interface Props {
@@ -9,7 +10,25 @@ interface Props {
 export default function StreamDashboard({
     stream,
 }: Props) {
+    const [title, setTitle] = useState(stream.title);
 
+const [category, setCategory] = useState(
+    stream.category
+);
+
+const [description, setDescription] = useState(
+    stream.description || ''
+);
+
+const saveStream = () => {
+
+    router.put('/creator/stream', {
+        title,
+        category,
+        description,
+    });
+
+};
     useEffect(() => {
 
     (window as any).Echo.channel('streams')
@@ -24,7 +43,6 @@ export default function StreamDashboard({
         (window as any).Echo.leave('streams');
 
     };
-
 }, []);
 
     return (
@@ -129,6 +147,101 @@ export default function StreamDashboard({
                 </div>
 
                 {/* Stream Information */}
+
+                {/* Stream Settings */}
+
+<div className="bg-white rounded-3xl p-8 shadow-sm border mt-8">
+
+    <h2 className="text-2xl font-bold mb-6">
+        Stream Settings
+    </h2>
+
+    <div className="space-y-6">
+
+        <div>
+
+            <label className="block text-sm font-medium mb-2">
+                Stream Title
+            </label>
+
+            <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="
+                    w-full
+                    border
+                    rounded-2xl
+                    px-4
+                    py-3
+                "
+            />
+
+        </div>
+
+        <div>
+
+            <label className="block text-sm font-medium mb-2">
+                Category
+            </label>
+
+            <input
+                type="text"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="
+                    w-full
+                    border
+                    rounded-2xl
+                    px-4
+                    py-3
+                "
+            />
+
+        </div>
+
+        <div>
+
+            <label className="block text-sm font-medium mb-2">
+                Description
+            </label>
+
+            <textarea
+                value={description}
+                onChange={(e) =>
+                    setDescription(e.target.value)
+                }
+                rows={4}
+                className="
+                    w-full
+                    border
+                    rounded-2xl
+                    px-4
+                    py-3
+                "
+            />
+
+        </div>
+
+        <button
+            onClick={saveStream}
+            className="
+                bg-black
+                text-white
+                px-6
+                py-3
+                rounded-2xl
+                font-bold
+            "
+        >
+
+            Save Stream Settings
+
+        </button>
+
+    </div>
+
+</div>
 
                 <div className="bg-white rounded-3xl p-8 shadow-sm border">
 
