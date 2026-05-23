@@ -54,6 +54,38 @@ const [status, setStatus] =
 
 }, [stream.status]);
 
+const [likes, setLikes] = useState(128);
+
+const [followers, setFollowers] =
+    useState(42);
+
+const [chatRate, setChatRate] =
+    useState(18);
+
+const [streamHealth, setStreamHealth] =
+    useState('Excellent');
+
+const copyStreamKey = async () => {
+
+    await navigator.clipboard.writeText(
+        stream.stream_key
+    );
+
+    alert('Stream key copied!');
+};
+
+
+const [quality, setQuality] =
+    useState('1080p');
+
+const [latency, setLatency] =
+    useState('Normal');
+
+const [bitrate, setBitrate] =
+    useState('6000 kbps');
+
+
+
 
     useEffect(() => {
 
@@ -70,6 +102,25 @@ const [status, setStatus] =
 
     };
 }, []);
+
+
+useEffect(() => {
+
+    const interval = setInterval(() => {
+
+        setLikes((prev) => prev + 1);
+
+        setFollowers((prev) => prev + 1);
+
+        setChatRate((prev) => prev + 1);
+
+    }, 5000);
+
+    return () => clearInterval(interval);
+
+}, []);
+
+
 
     return (
         <AppLayout>
@@ -182,23 +233,177 @@ const [status, setStatus] =
 
                 {/* Stream Key */}
 
-                <div className="bg-white rounded-3xl p-8 shadow-sm border mb-8">
+                <div className="space-y-6">
 
-                    <h2 className="text-2xl font-bold mb-4">
-                        Stream Key
-                    </h2>
+    <div>
 
-                    <div className="bg-black text-green-400 p-4 rounded-2xl font-mono break-all">
+        <p className="text-sm text-gray-500 mb-2">
+            RTMP Server URL
+        </p>
 
-                        {stream.stream_key}
+        <div
+            className="
+                bg-black
+                text-green-400
+                p-4
+                rounded-2xl
+                font-mono
+                break-all
+            "
+        >
 
-                    </div>
+            rtmp://streamerflow.live/app
 
-                </div>
+        </div>
+
+    </div>
+
+    <div>
+
+        <p className="text-sm text-gray-500 mb-2">
+            Stream Key
+        </p>
+
+        <div
+            className="
+                bg-black
+                text-green-400
+                p-4
+                rounded-2xl
+                font-mono
+                break-all
+            "
+        >
+
+            {stream.stream_key}
+
+        </div>
+
+    </div>
+
+    <button
+        onClick={copyStreamKey}
+        className="
+            bg-black
+            text-white
+            px-5
+            py-3
+            rounded-2xl
+            font-bold
+        "
+    >
+
+        Copy Stream Key
+
+    </button>
+
+</div>
 
                 {/* Stream Information */}
 
                 {/* Stream Settings */}
+
+
+{/* Broadcast Controls */}
+
+<div className="bg-white rounded-3xl p-8 shadow-sm border mt-8">
+
+    <h2 className="text-2xl font-bold mb-6">
+        Broadcast Controls
+    </h2>
+
+    <div className="grid md:grid-cols-3 gap-6">
+
+        <div>
+
+            <label className="block text-sm font-medium mb-2">
+                Stream Quality
+            </label>
+
+            <select
+                value={quality}
+                onChange={(e) =>
+                    setQuality(e.target.value)
+                }
+                className="
+                    w-full
+                    border
+                    rounded-2xl
+                    px-4
+                    py-3
+                "
+            >
+
+                <option>720p</option>
+                <option>1080p</option>
+                <option>1440p</option>
+                <option>4K</option>
+
+            </select>
+
+        </div>
+
+        <div>
+
+            <label className="block text-sm font-medium mb-2">
+                Stream Latency
+            </label>
+
+            <select
+                value={latency}
+                onChange={(e) =>
+                    setLatency(e.target.value)
+                }
+                className="
+                    w-full
+                    border
+                    rounded-2xl
+                    px-4
+                    py-3
+                "
+            >
+
+                <option>Low</option>
+                <option>Normal</option>
+                <option>Ultra Low</option>
+
+            </select>
+
+        </div>
+
+        <div>
+
+            <label className="block text-sm font-medium mb-2">
+                Bitrate
+            </label>
+
+            <select
+                value={bitrate}
+                onChange={(e) =>
+                    setBitrate(e.target.value)
+                }
+                className="
+                    w-full
+                    border
+                    rounded-2xl
+                    px-4
+                    py-3
+                "
+            >
+
+                <option>2500 kbps</option>
+                <option>4500 kbps</option>
+                <option>6000 kbps</option>
+                <option>9000 kbps</option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 {/* Stream Settings */}
 
@@ -461,6 +666,85 @@ const [status, setStatus] =
             </p>
 
         </div>
+
+    </div>
+
+</div>
+
+
+{/* Stream Analytics */}
+
+<div className="grid md:grid-cols-4 gap-6 mt-8">
+
+    <div className="bg-white rounded-3xl p-6 shadow-sm border">
+
+        <p className="text-sm text-gray-500 mb-2">
+            Total Viewers
+        </p>
+
+        <h3 className="text-3xl font-bold">
+            {stream.viewer_count}
+        </h3>
+
+    </div>
+
+    <div className="bg-white rounded-3xl p-6 shadow-sm border">
+
+        <p className="text-sm text-gray-500 mb-2">
+            Likes
+        </p>
+
+        <h3 className="text-3xl font-bold">
+            {likes}
+        </h3>
+
+    </div>
+
+    <div className="bg-white rounded-3xl p-6 shadow-sm border">
+
+        <p className="text-sm text-gray-500 mb-2">
+            Followers Gained
+        </p>
+
+        <h3 className="text-3xl font-bold">
+            +{followers}
+        </h3>
+
+    </div>
+
+    <div className="bg-white rounded-3xl p-6 shadow-sm border">
+
+    <p className="text-sm text-gray-500 mb-2">
+        Chat Rate
+    </p>
+
+    <h3 className="text-3xl font-bold">
+        {chatRate}/min
+    </h3>
+
+</div>
+
+
+    <div className="bg-white rounded-3xl p-6 shadow-sm border">
+
+        <p className="text-sm text-gray-500 mb-2">
+            Stream Health
+        </p>
+
+        <h3
+            className={`
+                text-2xl
+                font-bold
+
+                ${
+                    streamHealth === 'Excellent'
+                        ? 'text-green-500'
+                        : 'text-yellow-500'
+                }
+            `}
+        >
+            {streamHealth}
+        </h3>
 
     </div>
 
