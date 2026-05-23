@@ -22,6 +22,13 @@ const [description, setDescription] = useState(
 
 const [thumbnail, setThumbnail] = useState<File | null>(null);
 
+const [thumbnailPreview, setThumbnailPreview] =
+    useState<string | null>(
+        stream.thumbnail
+            ? `/storage/${stream.thumbnail}`
+            : null
+    );
+
 const saveStream = () => {
 
     router.post(
@@ -38,6 +45,16 @@ const saveStream = () => {
     );
 
 };
+const [status, setStatus] =
+    useState(stream.status);
+
+    useEffect(() => {
+
+    setStatus(stream.status);
+
+}, [stream.status]);
+
+
     useEffect(() => {
 
     (window as any).Echo.channel('streams')
@@ -76,13 +93,27 @@ const saveStream = () => {
                             </p>
 
                             <h2 className="text-3xl font-bold capitalize">
-                                {stream.status}
+                                    {status}
                             </h2>
 
                             <div className="flex gap-4 mb-8">
 
     <button
-        onClick={() => router.post('/creator/stream/start')}
+    onClick={() => {
+
+        router.post(
+            '/creator/stream/start',
+            {},
+            {
+                onSuccess: () => {
+
+                    setStatus('live');
+
+                },
+            }
+        );
+
+    }}
         className="
             bg-red-600
             text-white
@@ -96,7 +127,17 @@ const saveStream = () => {
     </button>
 
     <button
-        onClick={() => router.post('/creator/stream/end')}
+        onClick={() => router.post(
+    '/creator/stream/end',
+    {},
+    {
+        onSuccess: () => {
+
+            setStatus('ended');
+
+        },
+    }
+)}
         className="
             bg-gray-900
             text-white
@@ -122,16 +163,16 @@ const saveStream = () => {
         text-sm
         font-bold
         ${
-            stream.status === 'live'
-                ? 'bg-red-500 text-white'
-                : stream.status === 'ended'
-                ? 'bg-gray-900 text-white'
-                : 'bg-gray-200 text-black'
+            status === 'live'
+    ? 'bg-red-500 text-white'
+    : status === 'ended'
+    ? 'bg-gray-900 text-white'
+    : 'bg-gray-200 text-black'
         }
     `}
 >
 
-                            {stream.status.toUpperCase()}
+                            {status?.toUpperCase()}
 
                         </div>
 
@@ -254,11 +295,19 @@ const saveStream = () => {
                 accept="image/*"
                 onChange={(e) => {
 
-                    if (e.target.files?.[0]) {
-                        setThumbnail(e.target.files[0]);
-                    }
+    const file = e.target.files?.[0];
 
-                }}
+    if (file) {
+
+        setThumbnail(file);
+
+        setThumbnailPreview(
+            URL.createObjectURL(file)
+        );
+
+    }
+
+}}
                 className="
                     w-full
                     border
@@ -308,42 +357,114 @@ const saveStream = () => {
     </form>
 
 </div>
+{/* Stream Preview */}
 
-                <div className="bg-white rounded-3xl p-8 shadow-sm border">
+<div className="bg-white rounded-3xl p-8 shadow-sm border">
 
-                    <h2 className="text-2xl font-bold mb-6">
-                        Stream Information
-                    </h2>
+    <h2 className="text-2xl font-bold mb-6">
+        Stream Preview
+    </h2>
 
-                    <div className="space-y-4">
+    <div className="rounded-3xl overflow-hidden border">
 
-                        <div>
+        {/* Thumbnail */}
 
-                            <p className="text-sm text-gray-500">
-                                Title
-                            </p>
+        <div className="h-64 bg-gray-100">
 
-                            <p className="font-semibold">
-                                {stream.title}
-                            </p>
+            {(stream.thumbnail || thumbnailPreview) ? (
 
-                        </div>
+                <img
+                    src={
+                        thumbnailPreview
+                            ? thumbnailPreview
+                            : `/storage/${stream.thumbnail}`
+                    }
+                    className="
+                        w-full
+                        h-full
+                        object-cover
+                    "
+                />
 
-                        <div>
+            ) : (
 
-                            <p className="text-sm text-gray-500">
-                                Viewers
-                            </p>
+                <div
+                    className="
+                        w-full
+                        h-full
+                        flex
+                        items-center
+                        justify-center
+                        text-gray-400
+                    "
+                >
 
-                            <p className="font-semibold">
-                                {stream.viewer_count}
-                            </p>
-
-                        </div>
-
-                    </div>
+                    {status?.toUpperCase()}
 
                 </div>
+
+            )}
+
+        </div>
+
+        {/* Preview Details */}
+
+        <div className="p-6 space-y-3">
+
+            <div className="flex items-center gap-3">
+
+                <div
+                    className={`
+    text-white
+    text-xs
+    font-bold
+    px-3
+    py-1
+    rounded-full
+
+    ${
+        status === 'live'
+            ? 'bg-red-500'
+            : status === 'ended'
+            ? 'bg-gray-900'
+            : 'bg-gray-400'
+    }
+`}
+                >
+
+                    {status?.toUpperCase()}
+
+                </div>
+
+                <p className="text-sm text-gray-500">
+                    {stream.viewer_count} viewers
+                </p>
+
+            </div>
+
+            <h3 className="text-2xl font-bold">
+
+                {title || stream.title}
+
+            </h3>
+
+            <p className="text-gray-500">
+
+                {category || 'No category selected'}
+
+            </p>
+
+            <p className="text-gray-700 leading-relaxed">
+
+                {description || 'No description added yet.'}
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
 
             </div>
 
