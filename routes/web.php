@@ -130,7 +130,7 @@ Route::post('/creator/videos', [
     VideoController::class,
     'store'
 ])->name('creator.videos.store');
-Route::put('/creator/stream', [
+Route::post('/creator/stream', [
     StreamController::class,
     'update',
 ])->name('creator.stream.update');

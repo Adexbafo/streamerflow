@@ -20,13 +20,22 @@ const [description, setDescription] = useState(
     stream.description || ''
 );
 
+const [thumbnail, setThumbnail] = useState<File | null>(null);
+
 const saveStream = () => {
 
-    router.put('/creator/stream', {
-        title,
-        category,
-        description,
-    });
+    router.post(
+        '/creator/stream',
+        {
+            title,
+            category,
+            description,
+            thumbnail,
+        },
+        {
+            forceFormData: true,
+        }
+    );
 
 };
     useEffect(() => {
@@ -150,13 +159,24 @@ const saveStream = () => {
 
                 {/* Stream Settings */}
 
+{/* Stream Settings */}
+
 <div className="bg-white rounded-3xl p-8 shadow-sm border mt-8">
 
     <h2 className="text-2xl font-bold mb-6">
         Stream Settings
     </h2>
 
-    <div className="space-y-6">
+    <form
+        className="space-y-6"
+        onSubmit={(e) => {
+
+            e.preventDefault();
+
+            saveStream();
+
+        }}
+    >
 
         <div>
 
@@ -223,8 +243,54 @@ const saveStream = () => {
 
         </div>
 
+        <div>
+
+            <label className="block text-sm font-medium mb-2">
+                Stream Thumbnail
+            </label>
+
+            <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+
+                    if (e.target.files?.[0]) {
+                        setThumbnail(e.target.files[0]);
+                    }
+
+                }}
+                className="
+                    w-full
+                    border
+                    rounded-2xl
+                    px-4
+                    py-3
+                "
+            />
+
+        </div>
+
+        {stream.thumbnail && (
+
+            <div className="mt-4">
+
+                <img
+                    src={`/storage/${stream.thumbnail}`}
+                    alt="Stream Thumbnail"
+                    className="
+                        rounded-2xl
+                        w-full
+                        h-56
+                        object-cover
+                    "
+                />
+
+            </div>
+
+        )}
+
         <button
-            onClick={saveStream}
+            type="submit"
             className="
                 bg-black
                 text-white
@@ -239,7 +305,7 @@ const saveStream = () => {
 
         </button>
 
-    </div>
+    </form>
 
 </div>
 

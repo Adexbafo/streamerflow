@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Events\StreamStatusUpdated;
 use App\Events\ViewerCountUpdated;
 use Illuminate\Http\Request;
+use App\Models\Stream;
 
 class StreamController extends Controller
 {
@@ -14,13 +15,13 @@ class StreamController extends Controller
      * Show creator stream dashboard.
      */
     public function show()
-    {
-        $stream = auth()->user()->stream;
+{
+    $stream = Stream::first();
 
-        return Inertia::render('Creator/StreamDashboard', [
-            'stream' => $stream,
-        ]);
-    }
+    return Inertia::render('Creator/StreamDashboard', [
+        'stream' => $stream,
+    ]);
+}
 
     public function start()
 {
@@ -33,7 +34,7 @@ class StreamController extends Controller
 
     StreamStatusUpdated::dispatch($stream);
 
-    return back();
+    return redirect()->back();
 }
 
 public function end()
@@ -51,21 +52,27 @@ public function end()
 }
 public function update(Request $request)
 {
-    $request->validate([
+    $stream = Stream::first();
+
+    $data = $request->validate([
         'title' => ['required', 'string', 'max:255'],
-        'category' => ['required', 'string', 'max:255'],
+        'category' => ['nullable', 'string', 'max:255'],
         'description' => ['nullable', 'string'],
+        'thumbnail' => ['nullable', 'image'],
     ]);
 
-    $stream = auth()->user()->stream;
+    if ($request->hasFile('thumbnail')) {
 
-    $stream->update([
-        'title' => $request->title,
-        'category' => $request->category,
-        'description' => $request->description,
-    ]);
+        $path = $request->file('thumbnail')
+            ->store('thumbnails', 'public');
 
-    return back();
+        $data['thumbnail'] = $path;
+
+    }
+
+    $stream->update($data);
+
+    return redirect()->back();
 }
 public function join()
 {

@@ -4,20 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
+
+
 class Stream extends Model
 {
     protected $fillable = [
-        'user_id',
-        'title',
-        'slug',
-        'description',
-        'category',
-        'thumbnail',
-        'status',
-        'viewer_count',
-        'started_at',
-        'ended_at',
-    ];
+    'title',
+    'slug',
+    'description',
+    'category',
+    'thumbnail',
+    'status',
+    'viewer_count',
+];
 
     protected $casts = [
         'started_at' => 'datetime',
