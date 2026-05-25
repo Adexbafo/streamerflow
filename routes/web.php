@@ -152,7 +152,20 @@ Route::post('/creator/stream/end', [
     StreamController::class,
     'end',
 ])->name('creator.stream.end');
+
+Route::post('/creator/stream/ingest/start', [
+    StreamController::class,
+    'startIngest',
+]);
+
+Route::post('/creator/stream/ingest/stop', [
+    StreamController::class,
+    'stopIngest',
+]);
+
     });
+
+
 
     /*
     |--------------------------------------------------------------------------
@@ -168,8 +181,26 @@ Route::post('/creator/stream/end', [
 
     });
 
-        Route::get('/streams/demo', function () {
-    return inertia('Streams/Show');
+        Route::get('/streams/{stream:slug}', function (Stream $stream) {
+
+            $stream->load('user');
+
+    return inertia('Streams/Show', [
+
+        'stream' => $stream,
+
+        'streamConfig' => [
+
+            'hlsPlaybackUrl' =>
+                config('streaming.hls.playback_url'),
+
+            'rtmpServer' =>
+                config('streaming.rtmp.server'),
+
+        ],
+
+    ]);  
+
 });
 
     Route::post('/creator/stream/join', [

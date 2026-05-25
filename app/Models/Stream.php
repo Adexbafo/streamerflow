@@ -17,6 +17,11 @@ class Stream extends Model
     'thumbnail',
     'status',
     'viewer_count',
+
+    'is_ingesting',
+    'playback_id',
+    'ingest_started_at',
+    'ingest_ended_at',
 ];
 
     protected $casts = [

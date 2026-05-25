@@ -101,4 +101,35 @@ public function leave()
         'viewer_count' => $stream->viewer_count,
     ]);
 }
+public function startIngest()
+{
+    $stream = Stream::first();
+
+    $stream->update([
+
+        'is_ingesting' => true,
+
+        'ingest_started_at' => now(),
+
+        'playback_id' => 'playback_' . uniqid(),
+
+    ]);
+
+    return redirect()->route('creator.stream');
+}
+
+public function stopIngest()
+{
+    $stream = Stream::first();
+
+    $stream->update([
+
+        'is_ingesting' => false,
+
+        'ingest_ended_at' => now(),
+
+    ]);
+
+    return redirect()->route('creator.stream');
+}
 }

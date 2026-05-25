@@ -9,7 +9,10 @@ import axios from 'axios';
 
 
 
-export default function Show() {
+export default function Show({
+    stream,
+    streamConfig,
+}: any) {
 
     const [viewerCount, setViewerCount] = useState(2431);
 
@@ -161,8 +164,7 @@ export default function Show() {
 
         const video = videoRef.current;
 
-        const streamUrl =
-            'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+        const streamUrl = streamConfig.hlsPlaybackUrl;
 
         if (Hls.isSupported()) {
 
@@ -242,7 +244,7 @@ export default function Show() {
                     <div className="mb-6">
 
                         <h1 className="text-3xl font-bold mb-2">
-                            Late Night Coding Stream
+                            {stream.title}
                         </h1>
 
                         <div className="flex items-center gap-4 text-gray-500">
@@ -255,7 +257,7 @@ export default function Show() {
                                 {viewerCount} watching
                             </span>
                             <span>
-                                Gaming
+                                {stream.category}
                             </span>
 
                         </div>
@@ -290,12 +292,12 @@ export default function Show() {
 
                         <div>
 
-                            <h2 className="font-bold text-xl">
-                                Adexmakai
-                            </h2>
+                            <h3 className="font-bold">
+                                {stream.user?.name}
+                            </h3>
 
-                            <p className="text-gray-500">
-                                Building StreamerFlow Live
+                            <p className="text-gray-500 text-sm">
+                                {stream.description}
                             </p>
 
                         </div>

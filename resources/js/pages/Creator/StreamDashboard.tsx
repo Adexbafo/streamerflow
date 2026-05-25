@@ -12,113 +12,113 @@ export default function StreamDashboard({
 }: Props) {
     const [title, setTitle] = useState(stream.title);
 
-const [category, setCategory] = useState(
-    stream.category
-);
-
-const [description, setDescription] = useState(
-    stream.description || ''
-);
-
-const [thumbnail, setThumbnail] = useState<File | null>(null);
-
-const [thumbnailPreview, setThumbnailPreview] =
-    useState<string | null>(
-        stream.thumbnail
-            ? `/storage/${stream.thumbnail}`
-            : null
+    const [category, setCategory] = useState(
+        stream.category
     );
 
-const saveStream = () => {
-
-    router.post(
-        '/creator/stream',
-        {
-            title,
-            category,
-            description,
-            thumbnail,
-        },
-        {
-            forceFormData: true,
-        }
+    const [description, setDescription] = useState(
+        stream.description || ''
     );
 
-};
-const [status, setStatus] =
-    useState(stream.status);
+    const [thumbnail, setThumbnail] = useState<File | null>(null);
 
-    useEffect(() => {
+    const [thumbnailPreview, setThumbnailPreview] =
+        useState<string | null>(
+            stream.thumbnail
+                ? `/storage/${stream.thumbnail}`
+                : null
+        );
 
-    setStatus(stream.status);
+    const saveStream = () => {
 
-}, [stream.status]);
-
-const [likes, setLikes] = useState(128);
-
-const [followers, setFollowers] =
-    useState(42);
-
-const [chatRate, setChatRate] =
-    useState(18);
-
-const [streamHealth, setStreamHealth] =
-    useState('Excellent');
-
-const copyStreamKey = async () => {
-
-    await navigator.clipboard.writeText(
-        stream.stream_key
-    );
-
-    alert('Stream key copied!');
-};
-
-
-const [quality, setQuality] =
-    useState('1080p');
-
-const [latency, setLatency] =
-    useState('Normal');
-
-const [bitrate, setBitrate] =
-    useState('6000 kbps');
-
-
-
-
-    useEffect(() => {
-
-    (window as any).Echo.channel('streams')
-        .listen('.stream.status.updated', (event: any) => {
-
-            console.log('Realtime Stream Update:', event);
-
-        });
-
-    return () => {
-
-        (window as any).Echo.leave('streams');
+        router.post(
+            '/creator/stream',
+            {
+                title,
+                category,
+                description,
+                thumbnail,
+            },
+            {
+                forceFormData: true,
+            }
+        );
 
     };
-}, []);
+    const [status, setStatus] =
+        useState(stream.status);
+
+    useEffect(() => {
+
+        setStatus(stream.status);
+
+    }, [stream.status]);
+
+    const [likes, setLikes] = useState(128);
+
+    const [followers, setFollowers] =
+        useState(42);
+
+    const [chatRate, setChatRate] =
+        useState(18);
+
+    const [streamHealth, setStreamHealth] =
+        useState('Excellent');
+
+    const copyStreamKey = async () => {
+
+        await navigator.clipboard.writeText(
+            stream.stream_key
+        );
+
+        alert('Stream key copied!');
+    };
 
 
-useEffect(() => {
+    const [quality, setQuality] =
+        useState('1080p');
 
-    const interval = setInterval(() => {
+    const [latency, setLatency] =
+        useState('Normal');
 
-        setLikes((prev) => prev + 1);
+    const [bitrate, setBitrate] =
+        useState('6000 kbps');
 
-        setFollowers((prev) => prev + 1);
 
-        setChatRate((prev) => prev + 1);
 
-    }, 5000);
 
-    return () => clearInterval(interval);
+    useEffect(() => {
 
-}, []);
+        (window as any).Echo.channel('streams')
+            .listen('.stream.status.updated', (event: any) => {
+
+                console.log('Realtime Stream Update:', event);
+
+            });
+
+        return () => {
+
+            (window as any).Echo.leave('streams');
+
+        };
+    }, []);
+
+
+    useEffect(() => {
+
+        const interval = setInterval(() => {
+
+            setLikes((prev) => prev + 1);
+
+            setFollowers((prev) => prev + 1);
+
+            setChatRate((prev) => prev + 1);
+
+        }, 5000);
+
+        return () => clearInterval(interval);
+
+    }, []);
 
 
 
@@ -144,28 +144,28 @@ useEffect(() => {
                             </p>
 
                             <h2 className="text-3xl font-bold capitalize">
-                                    {status}
+                                {status}
                             </h2>
 
                             <div className="flex gap-4 mb-8">
 
-    <button
-    onClick={() => {
+                                <button
+                                    onClick={() => {
 
-        router.post(
-            '/creator/stream/start',
-            {},
-            {
-                onSuccess: () => {
+                                        router.post(
+                                            '/creator/stream/start',
+                                            {},
+                                            {
+                                                onSuccess: () => {
 
-                    setStatus('live');
+                                                    setStatus('live');
 
-                },
-            }
-        );
+                                                },
+                                            }
+                                        );
 
-    }}
-        className="
+                                    }}
+                                    className="
             bg-red-600
             text-white
             px-6
@@ -173,23 +173,23 @@ useEffect(() => {
             rounded-2xl
             font-bold
         "
-    >
-        Go Live
-    </button>
+                                >
+                                    Go Live
+                                </button>
 
-    <button
-        onClick={() => router.post(
-    '/creator/stream/end',
-    {},
-    {
-        onSuccess: () => {
+                                <button
+                                    onClick={() => router.post(
+                                        '/creator/stream/end',
+                                        {},
+                                        {
+                                            onSuccess: () => {
 
-            setStatus('ended');
+                                                setStatus('ended');
 
-        },
-    }
-)}
-        className="
+                                            },
+                                        }
+                                    )}
+                                    className="
             bg-gray-900
             text-white
             px-6
@@ -197,31 +197,123 @@ useEffect(() => {
             rounded-2xl
             font-bold
         "
-    >
-        End Stream
-    </button>
+                                >
+                                    End Stream
+                                </button>
 
-</div>
+                                <div className="flex gap-4 mt-4">
+
+                                    <button
+                                        onClick={() =>
+                                            router.post('/creator/stream/ingest/start')
+                                        }
+                                        className="
+            bg-green-600
+            text-white
+            px-5
+            py-2
+            rounded-2xl
+            font-bold
+        "
+                                    >
+                                        Connect OBS
+                                    </button>
+
+                                    <button
+                                        onClick={() =>
+                                            router.post('/creator/stream/ingest/stop')
+                                        }
+                                        className="
+            bg-gray-700
+            text-white
+            px-5
+            py-2
+            rounded-2xl
+            font-bold
+        "
+                                    >
+                                        Disconnect OBS
+                                    </button>
+
+                                </div>
+
+                                <div className="mt-6 space-y-2">
+
+                                    <p className="text-sm text-gray-500">
+                                        Encoder Status
+                                    </p>
+
+                                    <div className="flex items-center gap-2">
+
+                                        <div
+                                            className={`
+                w-3
+                h-3
+                rounded-full
+                ${stream.is_ingesting
+                                                    ? 'bg-green-500'
+                                                    : 'bg-gray-400'
+                                                }
+            `}
+                                        />
+
+                                        <p className="font-semibold">
+
+                                            {stream.is_ingesting
+                                                ? 'OBS Connected'
+                                                : 'OBS Offline'}
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                                <div className="mt-4">
+
+                                    <p className="text-sm text-gray-500">
+                                        Playback Session ID
+                                    </p>
+
+                                    <div
+                                        className="
+            bg-black
+            text-green-400
+            rounded-2xl
+            px-4
+            py-3
+            mt-2
+            font-mono
+            text-sm
+        "
+                                    >
+
+                                        {stream.playback_id || 'No active playback session'}
+
+                                    </div>
+
+                                </div>
+
+                            </div>
 
                         </div>
 
 
                         <div
-    className={`
+                            className={`
         px-5
         py-2
         rounded-full
         text-sm
         font-bold
-        ${
-            status === 'live'
-    ? 'bg-red-500 text-white'
-    : status === 'ended'
-    ? 'bg-gray-900 text-white'
-    : 'bg-gray-200 text-black'
-        }
+        ${status === 'live'
+                                    ? 'bg-red-500 text-white'
+                                    : status === 'ended'
+                                        ? 'bg-gray-900 text-white'
+                                        : 'bg-gray-200 text-black'
+                                }
     `}
->
+                        >
 
                             {status?.toUpperCase()}
 
@@ -235,14 +327,14 @@ useEffect(() => {
 
                 <div className="space-y-6">
 
-    <div>
+                    <div>
 
-        <p className="text-sm text-gray-500 mb-2">
-            RTMP Server URL
-        </p>
+                        <p className="text-sm text-gray-500 mb-2">
+                            RTMP Server URL
+                        </p>
 
-        <div
-            className="
+                        <div
+                            className="
                 bg-black
                 text-green-400
                 p-4
@@ -250,22 +342,22 @@ useEffect(() => {
                 font-mono
                 break-all
             "
-        >
+                        >
 
-            rtmp://streamerflow.live/app
+                            rtmp://streamerflow.live/app
 
-        </div>
+                        </div>
 
-    </div>
+                    </div>
 
-    <div>
+                    <div>
 
-        <p className="text-sm text-gray-500 mb-2">
-            Stream Key
-        </p>
+                        <p className="text-sm text-gray-500 mb-2">
+                            Stream Key
+                        </p>
 
-        <div
-            className="
+                        <div
+                            className="
                 bg-black
                 text-green-400
                 p-4
@@ -273,17 +365,17 @@ useEffect(() => {
                 font-mono
                 break-all
             "
-        >
+                        >
 
-            {stream.stream_key}
+                            {stream.stream_key}
 
-        </div>
+                        </div>
 
-    </div>
+                    </div>
 
-    <button
-        onClick={copyStreamKey}
-        className="
+                    <button
+                        onClick={copyStreamKey}
+                        className="
             bg-black
             text-white
             px-5
@@ -291,261 +383,261 @@ useEffect(() => {
             rounded-2xl
             font-bold
         "
-    >
+                    >
 
-        Copy Stream Key
+                        Copy Stream Key
 
-    </button>
+                    </button>
 
-</div>
+                </div>
 
                 {/* Stream Information */}
 
                 {/* Stream Settings */}
 
 
-{/* Broadcast Controls */}
+                {/* Broadcast Controls */}
 
-<div className="bg-white rounded-3xl p-8 shadow-sm border mt-8">
+                <div className="bg-white rounded-3xl p-8 shadow-sm border mt-8">
 
-    <h2 className="text-2xl font-bold mb-6">
-        Broadcast Controls
-    </h2>
+                    <h2 className="text-2xl font-bold mb-6">
+                        Broadcast Controls
+                    </h2>
 
-    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-3 gap-6">
 
-        <div>
+                        <div>
 
-            <label className="block text-sm font-medium mb-2">
-                Stream Quality
-            </label>
+                            <label className="block text-sm font-medium mb-2">
+                                Stream Quality
+                            </label>
 
-            <select
-                value={quality}
-                onChange={(e) =>
-                    setQuality(e.target.value)
-                }
-                className="
+                            <select
+                                value={quality}
+                                onChange={(e) =>
+                                    setQuality(e.target.value)
+                                }
+                                className="
                     w-full
                     border
                     rounded-2xl
                     px-4
                     py-3
                 "
-            >
+                            >
 
-                <option>720p</option>
-                <option>1080p</option>
-                <option>1440p</option>
-                <option>4K</option>
+                                <option>720p</option>
+                                <option>1080p</option>
+                                <option>1440p</option>
+                                <option>4K</option>
 
-            </select>
+                            </select>
 
-        </div>
+                        </div>
 
-        <div>
+                        <div>
 
-            <label className="block text-sm font-medium mb-2">
-                Stream Latency
-            </label>
+                            <label className="block text-sm font-medium mb-2">
+                                Stream Latency
+                            </label>
 
-            <select
-                value={latency}
-                onChange={(e) =>
-                    setLatency(e.target.value)
-                }
-                className="
+                            <select
+                                value={latency}
+                                onChange={(e) =>
+                                    setLatency(e.target.value)
+                                }
+                                className="
                     w-full
                     border
                     rounded-2xl
                     px-4
                     py-3
                 "
-            >
+                            >
 
-                <option>Low</option>
-                <option>Normal</option>
-                <option>Ultra Low</option>
+                                <option>Low</option>
+                                <option>Normal</option>
+                                <option>Ultra Low</option>
 
-            </select>
+                            </select>
 
-        </div>
+                        </div>
 
-        <div>
+                        <div>
 
-            <label className="block text-sm font-medium mb-2">
-                Bitrate
-            </label>
+                            <label className="block text-sm font-medium mb-2">
+                                Bitrate
+                            </label>
 
-            <select
-                value={bitrate}
-                onChange={(e) =>
-                    setBitrate(e.target.value)
-                }
-                className="
+                            <select
+                                value={bitrate}
+                                onChange={(e) =>
+                                    setBitrate(e.target.value)
+                                }
+                                className="
                     w-full
                     border
                     rounded-2xl
                     px-4
                     py-3
                 "
-            >
+                            >
 
-                <option>2500 kbps</option>
-                <option>4500 kbps</option>
-                <option>6000 kbps</option>
-                <option>9000 kbps</option>
+                                <option>2500 kbps</option>
+                                <option>4500 kbps</option>
+                                <option>6000 kbps</option>
+                                <option>9000 kbps</option>
 
-            </select>
+                            </select>
 
-        </div>
+                        </div>
 
-    </div>
+                    </div>
 
-</div>
+                </div>
 
 
-{/* Stream Settings */}
+                {/* Stream Settings */}
 
-<div className="bg-white rounded-3xl p-8 shadow-sm border mt-8">
+                <div className="bg-white rounded-3xl p-8 shadow-sm border mt-8">
 
-    <h2 className="text-2xl font-bold mb-6">
-        Stream Settings
-    </h2>
+                    <h2 className="text-2xl font-bold mb-6">
+                        Stream Settings
+                    </h2>
 
-    <form
-        className="space-y-6"
-        onSubmit={(e) => {
+                    <form
+                        className="space-y-6"
+                        onSubmit={(e) => {
 
-            e.preventDefault();
+                            e.preventDefault();
 
-            saveStream();
+                            saveStream();
 
-        }}
-    >
+                        }}
+                    >
 
-        <div>
+                        <div>
 
-            <label className="block text-sm font-medium mb-2">
-                Stream Title
-            </label>
+                            <label className="block text-sm font-medium mb-2">
+                                Stream Title
+                            </label>
 
-            <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="
+                            <input
+                                type="text"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                className="
                     w-full
                     border
                     rounded-2xl
                     px-4
                     py-3
                 "
-            />
+                            />
 
-        </div>
+                        </div>
 
-        <div>
+                        <div>
 
-            <label className="block text-sm font-medium mb-2">
-                Category
-            </label>
+                            <label className="block text-sm font-medium mb-2">
+                                Category
+                            </label>
 
-            <input
-                type="text"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="
+                            <input
+                                type="text"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                className="
                     w-full
                     border
                     rounded-2xl
                     px-4
                     py-3
                 "
-            />
+                            />
 
-        </div>
+                        </div>
 
-        <div>
+                        <div>
 
-            <label className="block text-sm font-medium mb-2">
-                Description
-            </label>
+                            <label className="block text-sm font-medium mb-2">
+                                Description
+                            </label>
 
-            <textarea
-                value={description}
-                onChange={(e) =>
-                    setDescription(e.target.value)
-                }
-                rows={4}
-                className="
+                            <textarea
+                                value={description}
+                                onChange={(e) =>
+                                    setDescription(e.target.value)
+                                }
+                                rows={4}
+                                className="
                     w-full
                     border
                     rounded-2xl
                     px-4
                     py-3
                 "
-            />
+                            />
 
-        </div>
+                        </div>
 
-        <div>
+                        <div>
 
-            <label className="block text-sm font-medium mb-2">
-                Stream Thumbnail
-            </label>
+                            <label className="block text-sm font-medium mb-2">
+                                Stream Thumbnail
+                            </label>
 
-            <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
 
-    const file = e.target.files?.[0];
+                                    const file = e.target.files?.[0];
 
-    if (file) {
+                                    if (file) {
 
-        setThumbnail(file);
+                                        setThumbnail(file);
 
-        setThumbnailPreview(
-            URL.createObjectURL(file)
-        );
+                                        setThumbnailPreview(
+                                            URL.createObjectURL(file)
+                                        );
 
-    }
+                                    }
 
-}}
-                className="
+                                }}
+                                className="
                     w-full
                     border
                     rounded-2xl
                     px-4
                     py-3
                 "
-            />
+                            />
 
-        </div>
+                        </div>
 
-        {stream.thumbnail && (
+                        {stream.thumbnail && (
 
-            <div className="mt-4">
+                            <div className="mt-4">
 
-                <img
-                    src={`/storage/${stream.thumbnail}`}
-                    alt="Stream Thumbnail"
-                    className="
+                                <img
+                                    src={`/storage/${stream.thumbnail}`}
+                                    alt="Stream Thumbnail"
+                                    className="
                         rounded-2xl
                         w-full
                         h-56
                         object-cover
                     "
-                />
+                                />
 
-            </div>
+                            </div>
 
-        )}
+                        )}
 
-        <button
-            type="submit"
-            className="
+                        <button
+                            type="submit"
+                            className="
                 bg-black
                 text-white
                 px-6
@@ -553,48 +645,48 @@ useEffect(() => {
                 rounded-2xl
                 font-bold
             "
-        >
+                        >
 
-            Save Stream Settings
+                            Save Stream Settings
 
-        </button>
+                        </button>
 
-    </form>
+                    </form>
 
-</div>
-{/* Stream Preview */}
+                </div>
+                {/* Stream Preview */}
 
-<div className="bg-white rounded-3xl p-8 shadow-sm border">
+                <div className="bg-white rounded-3xl p-8 shadow-sm border">
 
-    <h2 className="text-2xl font-bold mb-6">
-        Stream Preview
-    </h2>
+                    <h2 className="text-2xl font-bold mb-6">
+                        Stream Preview
+                    </h2>
 
-    <div className="rounded-3xl overflow-hidden border">
+                    <div className="rounded-3xl overflow-hidden border">
 
-        {/* Thumbnail */}
+                        {/* Thumbnail */}
 
-        <div className="h-64 bg-gray-100">
+                        <div className="h-64 bg-gray-100">
 
-            {(stream.thumbnail || thumbnailPreview) ? (
+                            {(stream.thumbnail || thumbnailPreview) ? (
 
-                <img
-                    src={
-                        thumbnailPreview
-                            ? thumbnailPreview
-                            : `/storage/${stream.thumbnail}`
-                    }
-                    className="
+                                <img
+                                    src={
+                                        thumbnailPreview
+                                            ? thumbnailPreview
+                                            : `/storage/${stream.thumbnail}`
+                                    }
+                                    className="
                         w-full
                         h-full
                         object-cover
                     "
-                />
+                                />
 
-            ) : (
+                            ) : (
 
-                <div
-                    className="
+                                <div
+                                    className="
                         w-full
                         h-full
                         flex
@@ -602,24 +694,24 @@ useEffect(() => {
                         justify-center
                         text-gray-400
                     "
-                >
+                                >
 
-                    {status?.toUpperCase()}
+                                    {status?.toUpperCase()}
 
-                </div>
+                                </div>
 
-            )}
+                            )}
 
-        </div>
+                        </div>
 
-        {/* Preview Details */}
+                        {/* Preview Details */}
 
-        <div className="p-6 space-y-3">
+                        <div className="p-6 space-y-3">
 
-            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-3">
 
-                <div
-                    className={`
+                                <div
+                                    className={`
     text-white
     text-xs
     font-bold
@@ -627,128 +719,126 @@ useEffect(() => {
     py-1
     rounded-full
 
-    ${
-        status === 'live'
-            ? 'bg-red-500'
-            : status === 'ended'
-            ? 'bg-gray-900'
-            : 'bg-gray-400'
-    }
+    ${status === 'live'
+                                            ? 'bg-red-500'
+                                            : status === 'ended'
+                                                ? 'bg-gray-900'
+                                                : 'bg-gray-400'
+                                        }
 `}
-                >
+                                >
 
-                    {status?.toUpperCase()}
+                                    {status?.toUpperCase()}
+
+                                </div>
+
+                                <p className="text-sm text-gray-500">
+                                    {stream.viewer_count} viewers
+                                </p>
+
+                            </div>
+
+                            <h3 className="text-2xl font-bold">
+
+                                {title || stream.title}
+
+                            </h3>
+
+                            <p className="text-gray-500">
+
+                                {category || 'No category selected'}
+
+                            </p>
+
+                            <p className="text-gray-700 leading-relaxed">
+
+                                {description || 'No description added yet.'}
+
+                            </p>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
-                <p className="text-sm text-gray-500">
-                    {stream.viewer_count} viewers
-                </p>
 
-            </div>
+                {/* Stream Analytics */}
 
-            <h3 className="text-2xl font-bold">
+                <div className="grid md:grid-cols-4 gap-6 mt-8">
 
-                {title || stream.title}
+                    <div className="bg-white rounded-3xl p-6 shadow-sm border">
 
-            </h3>
+                        <p className="text-sm text-gray-500 mb-2">
+                            Total Viewers
+                        </p>
 
-            <p className="text-gray-500">
+                        <h3 className="text-3xl font-bold">
+                            {stream.viewer_count}
+                        </h3>
 
-                {category || 'No category selected'}
+                    </div>
 
-            </p>
+                    <div className="bg-white rounded-3xl p-6 shadow-sm border">
 
-            <p className="text-gray-700 leading-relaxed">
+                        <p className="text-sm text-gray-500 mb-2">
+                            Likes
+                        </p>
 
-                {description || 'No description added yet.'}
+                        <h3 className="text-3xl font-bold">
+                            {likes}
+                        </h3>
 
-            </p>
+                    </div>
 
-        </div>
+                    <div className="bg-white rounded-3xl p-6 shadow-sm border">
 
-    </div>
+                        <p className="text-sm text-gray-500 mb-2">
+                            Followers Gained
+                        </p>
 
-</div>
+                        <h3 className="text-3xl font-bold">
+                            +{followers}
+                        </h3>
 
+                    </div>
 
-{/* Stream Analytics */}
+                    <div className="bg-white rounded-3xl p-6 shadow-sm border">
 
-<div className="grid md:grid-cols-4 gap-6 mt-8">
+                        <p className="text-sm text-gray-500 mb-2">
+                            Chat Rate
+                        </p>
 
-    <div className="bg-white rounded-3xl p-6 shadow-sm border">
+                        <h3 className="text-3xl font-bold">
+                            {chatRate}/min
+                        </h3>
 
-        <p className="text-sm text-gray-500 mb-2">
-            Total Viewers
-        </p>
-
-        <h3 className="text-3xl font-bold">
-            {stream.viewer_count}
-        </h3>
-
-    </div>
-
-    <div className="bg-white rounded-3xl p-6 shadow-sm border">
-
-        <p className="text-sm text-gray-500 mb-2">
-            Likes
-        </p>
-
-        <h3 className="text-3xl font-bold">
-            {likes}
-        </h3>
-
-    </div>
-
-    <div className="bg-white rounded-3xl p-6 shadow-sm border">
-
-        <p className="text-sm text-gray-500 mb-2">
-            Followers Gained
-        </p>
-
-        <h3 className="text-3xl font-bold">
-            +{followers}
-        </h3>
-
-    </div>
-
-    <div className="bg-white rounded-3xl p-6 shadow-sm border">
-
-    <p className="text-sm text-gray-500 mb-2">
-        Chat Rate
-    </p>
-
-    <h3 className="text-3xl font-bold">
-        {chatRate}/min
-    </h3>
-
-</div>
+                    </div>
 
 
-    <div className="bg-white rounded-3xl p-6 shadow-sm border">
+                    <div className="bg-white rounded-3xl p-6 shadow-sm border">
 
-        <p className="text-sm text-gray-500 mb-2">
-            Stream Health
-        </p>
+                        <p className="text-sm text-gray-500 mb-2">
+                            Stream Health
+                        </p>
 
-        <h3
-            className={`
+                        <h3
+                            className={`
                 text-2xl
                 font-bold
 
-                ${
-                    streamHealth === 'Excellent'
-                        ? 'text-green-500'
-                        : 'text-yellow-500'
-                }
+                ${streamHealth === 'Excellent'
+                                    ? 'text-green-500'
+                                    : 'text-yellow-500'
+                                }
             `}
-        >
-            {streamHealth}
-        </h3>
+                        >
+                            {streamHealth}
+                        </h3>
 
-    </div>
+                    </div>
 
-</div>
+                </div>
 
             </div>
 
