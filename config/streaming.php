@@ -15,7 +15,7 @@ return [
 
         'playback_url' => env(
             'HLS_PLAYBACK_URL',
-            'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+            'http://127.0.0.1:8888'
         ),
 
     ],

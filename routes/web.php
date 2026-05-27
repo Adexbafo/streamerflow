@@ -46,6 +46,31 @@ Route::get('/videos/{video:slug}', [
     'show',
 ])->name('videos.show');
 
+Route::get('/streams/{stream:slug}', function (Stream $stream) {
+
+    $stream->load('user');
+
+    return inertia('Streams/Show', [
+
+        'stream' => $stream,
+
+        'streamConfig' => [
+
+            'hlsPlaybackUrl' =>
+                config('streaming.hls.playback_url'),
+
+            'rtmpServer' =>
+                config('streaming.rtmp.server'),
+
+        ],
+
+    ]);  
+
+});
+
+
+
+
 Route::middleware(['auth'])->group(function () {
 
     Route::post('/videos/{video}/comments', [
@@ -180,28 +205,6 @@ Route::post('/creator/stream/ingest/stop', [
         })->name('viewer.dashboard');
 
     });
-
-        Route::get('/streams/{stream:slug}', function (Stream $stream) {
-
-            $stream->load('user');
-
-    return inertia('Streams/Show', [
-
-        'stream' => $stream,
-
-        'streamConfig' => [
-
-            'hlsPlaybackUrl' =>
-                config('streaming.hls.playback_url'),
-
-            'rtmpServer' =>
-                config('streaming.rtmp.server'),
-
-        ],
-
-    ]);  
-
-});
 
     Route::post('/creator/stream/join', [
     StreamController::class,

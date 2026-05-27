@@ -50,7 +50,6 @@ export default function Show({
     };
 
     useEffect(() => {
-
         axios.post('/creator/stream/join');
 
         axios.get('/streams/1/messages')
@@ -160,11 +159,14 @@ export default function Show({
 
     useEffect(() => {
 
-        if (!videoRef.current) return;
-
         const video = videoRef.current;
 
-        const streamUrl = streamConfig.hlsPlaybackUrl;
+        if (!video) return;
+
+        const streamUrl =
+            `${streamConfig.hlsPlaybackUrl}/live/${stream.stream_key}/index.m3u8`;
+
+        console.log(streamUrl);
 
         if (Hls.isSupported()) {
 
@@ -174,14 +176,11 @@ export default function Show({
 
             hls.attachMedia(video);
 
-            hls.on(
-                Hls.Events.MANIFEST_PARSED,
-                () => {
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
 
-                    video.play();
+                video.play();
 
-                }
-            );
+            });
 
             return () => {
 
@@ -189,11 +188,9 @@ export default function Show({
 
             };
 
-        } else if (
-            video.canPlayType(
-                'application/vnd.apple.mpegurl'
-            )
-        ) {
+        }
+
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
 
             video.src = streamUrl;
 
@@ -228,6 +225,7 @@ export default function Show({
                                 controls
                                 autoPlay
                                 muted
+                                playsInline
                                 className="
                 w-full
                 aspect-video

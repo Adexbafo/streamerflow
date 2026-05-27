@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Stream extends Model
 {
     protected $fillable = [
+    'user_id',
     'title',
     'slug',
     'description',
@@ -17,6 +18,8 @@ class Stream extends Model
     'thumbnail',
     'status',
     'viewer_count',
+
+    'stream_key',
 
     'is_ingesting',
     'playback_id',
