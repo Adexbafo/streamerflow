@@ -10,84 +10,106 @@ export default function AppLayout({
     children,
 }: Props) {
 
-    const { auth } = usePage().props as any;
+    const pageProps = usePage().props as any;
+
+    console.log(pageProps);
+
+    const {
+        auth,
+        walletBalance,
+    } = pageProps;
 
     return (
         <div className="min-h-screen flex bg-gray-100">
 
             {/* Sidebar */}
 
-<div className="hidden lg:flex lg:w-64 border-r bg-white flex-col p-6">
+            <div className="hidden lg:flex lg:w-64 border-r bg-white flex-col p-6">
 
-    <div className="text-2xl font-bold mb-10">
-        StreamerFlow
-    </div>
+                <div className="text-2xl font-bold mb-10">
+                    StreamerFlow
+                </div>
 
-    <div className="space-y-2">
+                <div
+                    className="
+        mb-6
+        px-4
+        py-3
+        rounded-2xl
+        bg-yellow-100
+        text-yellow-800
+        font-bold
+        text-sm
+    "
+                >
+                    💰 {walletBalance} Coins
+                </div>
 
-        <SidebarLink
-            href="/"
-            label="Home"
-        />
+                <div className="space-y-2">
 
-        <SidebarLink
-            href="/trending"
-            label="Trending"
-        />
+                    <SidebarLink
+                        href="/"
+                        label="Home"
+                    />
 
-        <SidebarLink
-            href="/search"
-            label="Search"
-        />
+                    <SidebarLink
+                        href="/trending"
+                        label="Trending"
+                    />
 
-        <SidebarLink
-            href="/notifications"
-            label="Notifications"
-        />
+                    <SidebarLink
+                        href="/search"
+                        label="Search"
+                    />
 
-        <SidebarLink
-            href="/saved-videos"
-            label="Saved Videos"
-        />
+                    <SidebarLink
+                        href="/notifications"
+                        label="Notifications"
+                    />
 
-        <SidebarLink
-            href={`/channels/${auth.user.username}`}
-            label="My Channel"
-        />
+                    <SidebarLink
+                        href="/saved-videos"
+                        label="Saved Videos"
+                    />
 
-        <SidebarLink
-    href="/creator/stream"
-    label="Stream Dashboard"
-/>
+                    <SidebarLink
+                        href={`/channels/${auth.user.username}`}
+                        label="My Channel"
+                    />
 
-    </div>
+                    <SidebarLink
+                        href="/creator/stream"
+                        label="Stream Dashboard"
+                    />
 
-</div>
-            
+                </div>
+
+            </div>
+
             {/* Main Content */}
             {/* Topbar */}
-        <div className="flex-1">
-        {/* Mobile Navigation */}
+            <div className="flex-1">
+                {/* Mobile Navigation */}
 
-<div className="lg:hidden flex items-center justify-between p-4 border-b bg-white sticky top-0 z-50">
+                <div className="lg:hidden flex items-center justify-between p-4 border-b bg-white sticky top-0 z-50">
 
-    <div className="text-xl font-bold">
-        StreamerFlow
-    </div>
+                    <div className="text-xl font-bold">
+                        StreamerFlow
+                    </div>
 
-    <button className="border px-4 py-2 rounded-xl">
-        ☰
-    </button>
+                    <button className="border px-4 py-2 rounded-xl">
+                        ☰
+                    </button>
 
-</div>            
-            <Topbar />
+                </div>
+                <Topbar />
 
-            <main className="flex-1 p-8">
+                <main className="flex-1 p-8">
 
-                {children}
+                    {children}
 
-            </main>
-        </div>
+                </main>
+            </div>
 
         </div>
     );

@@ -6,6 +6,7 @@ import {
 } from 'react';
 import Hls from 'hls.js';
 import axios from 'axios';
+import { useForm } from '@inertiajs/react';
 
 
 
@@ -22,6 +23,18 @@ export default function Show({
     const [viewers, setViewers] = useState<any[]>([]);
     const [activities, setActivities] = useState<any[]>([]);
     const [typingUsers, setTypingUsers] = useState<string[]>([]);
+    const [showTipBox, setShowTipBox] = useState(false);
+
+    const {
+        data,
+        setData,
+        post,
+        processing,
+        reset,
+    } = useForm({
+        receiver_id: stream.user.id,
+        amount: 100,
+    });
     const videoRef = useRef<HTMLVideoElement>(null);
 
     const sendMessage = async () => {
@@ -265,6 +278,57 @@ export default function Show({
                             <button className="bg-black text-white px-5 py-2 rounded-xl hover:opacity-90 transition">
                                 ❤️ Like
                             </button>
+
+                            <button
+                                onClick={() => setShowTipBox(!showTipBox)}
+                                className="px-5 py-3 rounded-2xl bg-yellow-400 font-semibold"
+                            >
+                                💰 Tip
+                            </button>
+
+                            {showTipBox && (
+
+                                <div className="mt-6 bg-white rounded-2xl p-6 border max-w-md">
+
+                                    <h3 className="text-xl font-bold mb-4">
+                                        Send Tip
+                                    </h3>
+
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={data.amount}
+                                        onChange={(e) =>
+                                            setData('amount', Number(e.target.value))
+                                        }
+                                        className="w-full border rounded-xl p-3 mb-4"
+                                    />
+
+                                    <button
+                                        onClick={() => {
+
+                                            post('/tips', {
+
+                                                onSuccess: () => {
+
+                                                    reset();
+
+                                                    setShowTipBox(false);
+
+                                                },
+
+                                            });
+
+                                        }}
+                                        disabled={processing}
+                                        className="px-6 py-3 rounded-2xl bg-black text-white"
+                                    >
+                                        {processing ? 'Sending...' : 'Send Tip'}
+                                    </button>
+
+                                </div>
+
+                            )}
 
                             <button className="border px-5 py-2 rounded-xl hover:bg-gray-100 transition">
                                 🔖 Save

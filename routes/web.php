@@ -14,6 +14,7 @@ use App\Http\Controllers\SavedVideoController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Creator\StreamController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\TipController;
 use App\Models\Stream;
 
 Route::get('/', function () {
@@ -82,6 +83,14 @@ Route::post('/chat/send', [
     ChatController::class,
     'store',
 ]);
+
+Route::post('/tips', [TipController::class, 'store'])
+    ->name('tips.store');
+
+Route::post('/streams/{stream}/tip', [
+    TipController::class,
+    'store',
+])->name('streams.tip');
 
 Route::post('/videos/{video}/like', [
     LikeController::class,

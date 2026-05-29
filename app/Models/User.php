@@ -4,8 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,9 +13,11 @@ use App\Models\ViewerProfile;
 use App\Enums\UserRole;
 use App\Models\Stream;
 use Illuminate\Support\Str;
+use App\Models\Wallet;
+use App\Models\Transaction;
+use App\Models\Tip;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
@@ -70,9 +70,17 @@ class User extends Authenticatable
         }
 
         Stream::create([
+
     'user_id' => $user->id,
-    'title' => "{$user->name}'s Stream",
+
+    'title' => $user->name . "'s Stream",
+
+    'slug' => Str::slug($user->username) . '-live',
+
     'stream_key' => Str::random(40),
+
+    'status' => 'offline',
+
 ]);
 
     });
@@ -124,5 +132,25 @@ public function stream()
 public function chatMessages()
 {
     return $this->hasMany(ChatMessage::class);
+}
+public function sentTransactions()
+{
+    return $this->hasMany(Transaction::class, 'sender_id');
+}
+public function receivedTransactions()
+{
+    return $this->hasMany(Transaction::class, 'receiver_id');
+}
+public function sentTips()
+{
+    return $this->hasMany(Tip::class, 'sender_id');
+}
+public function receivedTips()
+{
+    return $this->hasMany(Tip::class, 'receiver_id');
+}
+public function wallet()
+{
+    return $this->hasOne(Wallet::class);
 }
 }
