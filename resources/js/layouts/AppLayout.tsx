@@ -87,6 +87,11 @@ export default function AppLayout({
                         label="Revenue Dashboard"
                     />
 
+                    <SidebarLink
+                        href="/creator/withdrawals"
+                        label="Withdrawals"
+                    />
+
                 </div>
 
             </div>

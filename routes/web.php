@@ -17,7 +17,8 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\TipController;
 use App\Models\Stream;
 use App\Http\Controllers\CreatorRevenueController;
-
+use App\Http\Controllers\WithdrawalController;
+use App\Http\Controllers\SubscriptionController;
 
 
 Route::get('/', function () {
@@ -150,6 +151,11 @@ Route::get('/streams/{stream}/messages', function (Stream $stream) {
 
 });
 
+Route::post(
+    '/subscribe',
+    [SubscriptionController::class, 'store']
+)->middleware('auth');
+
     /*
     |--------------------------------------------------------------------------
     | Creator Dashboard
@@ -206,6 +212,22 @@ Route::post('/creator/stream/ingest/stop', [
 ]);
 
     });
+
+Route::get(
+
+    '/creator/withdrawals',
+
+    [WithdrawalController::class, 'index']
+
+)->name('creator.withdrawals');
+
+Route::post(
+
+    '/withdrawals',
+
+    [WithdrawalController::class, 'store']
+
+)->name('withdrawals.store');
 
 
 

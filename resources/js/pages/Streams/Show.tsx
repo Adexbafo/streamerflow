@@ -6,7 +6,11 @@ import {
 } from 'react';
 import Hls from 'hls.js';
 import axios from 'axios';
-import { useForm, usePage } from '@inertiajs/react';
+import {
+    useForm,
+    usePage,
+    router,
+} from '@inertiajs/react';
 import { toast } from 'sonner';
 
 
@@ -35,6 +39,7 @@ export default function Show({
         reset,
     } = useForm({
         receiver_id: stream.user.id,
+        creator_id: stream.user.id,
         amount: 100,
     });
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -423,11 +428,63 @@ export default function Show({
 
                         </div>
 
-                        <button className="bg-black text-white px-6 py-3 rounded-xl">
+                        <div className="flex gap-3">
 
-                            Follow
+                            <button
+                                className="
+            bg-black
+            text-white
+            px-6
+            py-3
+            rounded-xl
+        "
+                            >
+                                Follow
+                            </button>
 
-                        </button>
+                            <button
+                                onClick={() => {
+
+                                    router.post('/subscribe', {
+
+                                        creator_id: stream.user.id,
+
+                                    }, {
+
+                                        preserveScroll: true,
+
+                                        onSuccess: () => {
+
+                                            toast.success(
+                                                'Subscription successful!'
+                                            );
+
+                                        },
+
+                                        onError: () => {
+
+                                            toast.error(
+                                                'Subscription failed.'
+                                            );
+
+                                        },
+
+                                    });
+
+                                }}
+                                className="
+            bg-purple-600
+            text-white
+            px-6
+            py-3
+            rounded-xl
+            font-bold
+        "
+                            >
+                                ⭐ Subscribe • 500 Coins
+                            </button>
+
+                        </div>
                     </div>
 
                     {/* Recommended Streams */}

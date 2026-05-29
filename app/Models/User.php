@@ -16,6 +16,8 @@ use Illuminate\Support\Str;
 use App\Models\Wallet;
 use App\Models\Transaction;
 use App\Models\Tip;
+use App\Models\Withdrawal;
+use App\Models\Subscription;
 
 
 class User extends Authenticatable
@@ -152,5 +154,24 @@ public function receivedTips()
 public function wallet()
 {
     return $this->hasOne(Wallet::class);
+}
+public function withdrawals()
+{
+    return $this->hasMany(Withdrawal::class);
+}
+public function subscriptions()
+{
+    return $this->hasMany(
+        Subscription::class,
+        'subscriber_id'
+    );
+}
+
+public function subscribers()
+{
+    return $this->hasMany(
+        Subscription::class,
+        'creator_id'
+    );
 }
 }
