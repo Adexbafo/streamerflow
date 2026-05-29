@@ -82,6 +82,11 @@ export default function AppLayout({
                         label="Stream Dashboard"
                     />
 
+                    <SidebarLink
+                        href="/creator/revenue"
+                        label="Revenue Dashboard"
+                    />
+
                 </div>
 
             </div>

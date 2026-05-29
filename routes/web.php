@@ -16,6 +16,9 @@ use App\Http\Controllers\Creator\StreamController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\TipController;
 use App\Models\Stream;
+use App\Http\Controllers\CreatorRevenueController;
+
+
 
 Route::get('/', function () {
 
@@ -69,10 +72,15 @@ Route::get('/streams/{stream:slug}', function (Stream $stream) {
 
 });
 
-
-
-
 Route::middleware(['auth'])->group(function () {
+
+
+Route::get('/creator/revenue', [
+
+    CreatorRevenueController::class,
+    'index',
+
+])->name('creator.revenue');
 
     Route::post('/videos/{video}/comments', [
     CommentController::class,

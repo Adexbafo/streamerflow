@@ -136,9 +136,14 @@ class TipController extends Controller
 
         });
 
-        return back()->with(
-            'success',
-            'Tip sent successfully.'
-        );
+        return back()->with([
+            'success' => 'Tip sent successfully.',
+            'tip_activity' => [
+                'sender' => $sender->username,
+                'amount' => $request->amount,
+                'message' => $request->message,
+            ],
+        ]);
+        
     }
 }

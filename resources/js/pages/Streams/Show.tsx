@@ -6,7 +6,8 @@ import {
 } from 'react';
 import Hls from 'hls.js';
 import axios from 'axios';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
+import { toast } from 'sonner';
 
 
 
@@ -24,6 +25,7 @@ export default function Show({
     const [activities, setActivities] = useState<any[]>([]);
     const [typingUsers, setTypingUsers] = useState<string[]>([]);
     const [showTipBox, setShowTipBox] = useState(false);
+    const { flash } = usePage().props as any;
 
     const {
         data,
@@ -140,6 +142,22 @@ export default function Show({
 
             })
 
+            .listen('TipSent', (e: any) => {
+
+                setActivities((prev) => [
+
+                    {
+                        type: 'tip',
+                        user: e.sender,
+                        amount: e.amount,
+                    },
+
+                    ...prev,
+
+                ]);
+
+            })
+
             .listenForWhisper('typing', (e: any) => {
 
                 setTypingUsers((prev) => {
@@ -169,6 +187,24 @@ export default function Show({
         };
 
     }, []);
+
+    useEffect(() => {
+
+        if (!flash?.tip_activity) return;
+
+        setActivities((prev) => [
+
+            {
+                type: 'tip',
+                user: flash.tip_activity.sender,
+                amount: flash.tip_activity.amount,
+            },
+
+            ...prev,
+
+        ]);
+
+    }, [flash]);
 
     useEffect(() => {
 
@@ -309,13 +345,36 @@ export default function Show({
 
                                             post('/tips', {
 
+                                                preserveScroll: true,
+
                                                 onSuccess: () => {
+
+                                                    toast.success('Tip sent successfully!');
+
+                                                    setActivities((prev) => [
+
+                                                        {
+                                                            type: 'tip',
+                                                            user: 'adexmakai',
+                                                            amount: data.amount,
+                                                        },
+
+                                                        ...prev,
+
+                                                    ]);
 
                                                     reset();
 
                                                     setShowTipBox(false);
 
                                                 },
+
+                                                onError: () => {
+
+                                                    toast.error('Failed to send tip.');
+
+                                                },
+
 
                                             });
 
@@ -499,9 +558,12 @@ export default function Show({
 
                                         {activity.user}{' '}
 
-                                        {activity.type === 'join'
-                                            ? 'joined the stream'
-                                            : 'left the stream'}
+                                        {activity.type === 'join' && 'joined the stream'}
+
+                                        {activity.type === 'leave' && 'left the stream'}
+
+                                        {activity.type === 'tip' &&
+                                            `tipped ${activity.amount} coins 🔥`}
 
                                     </div>
 
