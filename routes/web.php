@@ -1,25 +1,24 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Creator\VideoController;
-use App\Http\Controllers\VideoWatchController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChannelController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\LikeController;
-use App\Http\Controllers\TrendingController;
-use App\Http\Controllers\FollowController;
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\SavedVideoController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\Creator\StreamController;
 use App\Http\Controllers\ChatController;
-use App\Http\Controllers\TipController;
-use App\Models\Stream;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Creator\StreamController;
+use App\Http\Controllers\Creator\VideoController;
 use App\Http\Controllers\CreatorRevenueController;
-use App\Http\Controllers\WithdrawalController;
+use App\Http\Controllers\FollowController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SavedVideoController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SubscriptionController;
-
+use App\Http\Controllers\TipController;
+use App\Http\Controllers\TrendingController;
+use App\Http\Controllers\VideoWatchController;
+use App\Http\Controllers\WithdrawalController;
+use App\Models\Stream;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
@@ -61,100 +60,99 @@ Route::get('/streams/{stream:slug}', function (Stream $stream) {
 
         'streamConfig' => [
 
-            'hlsPlaybackUrl' =>
-                config('streaming.hls.playback_url'),
+            'hlsPlaybackUrl' => config('streaming.hls.playback_url'),
 
-            'rtmpServer' =>
-                config('streaming.rtmp.server'),
+            'rtmpServer' => config('streaming.rtmp.server'),
 
         ],
 
-    ]);  
+    ]);
 
 });
 
 Route::middleware(['auth'])->group(function () {
 
+    Route::get('/creator/revenue', [
 
-Route::get('/creator/revenue', [
+        CreatorRevenueController::class,
+        'index',
 
-    CreatorRevenueController::class,
-    'index',
-
-])->name('creator.revenue');
+    ])->name('creator.revenue');
 
     Route::post('/videos/{video}/comments', [
-    CommentController::class,
-    'store',
-])->name('comments.store');
+        CommentController::class,
+        'store',
+    ])->name('comments.store');
 
-Route::post('/chat/send', [
-    ChatController::class,
-    'store',
-]);
+    Route::get('/streams/{stream}', [StreamController::class, 'show']);
 
-Route::post('/tips', [TipController::class, 'store'])
-    ->name('tips.store');
+    Route::post('/chat/send', [
+        ChatController::class,
+        'store',
+    ]);
 
-Route::post('/streams/{stream}/tip', [
-    TipController::class,
-    'store',
-])->name('streams.tip');
+    Route::post('/tips', [TipController::class, 'store'])
+        ->name('tips.store');
 
-Route::post('/videos/{video}/like', [
-    LikeController::class,
-    'toggle',
-])->name('videos.like');
+    Route::post('/streams/{stream}/tip', [
+        TipController::class,
+        'store',
+    ])->name('streams.tip');
+
+    Route::post('/videos/{video}/like', [
+        LikeController::class,
+        'toggle',
+    ])->name('videos.like');
 
     Route::get('/dashboard', function () {
-    return redirect('/');
-})->middleware(['auth'])->name('dashboard');
+        return redirect('/');
+    })->middleware(['auth'])->name('dashboard');
 
     Route::post('/channels/{user}/follow', [
-    FollowController::class,
-    'toggle',
-])->name('channels.follow');
+        FollowController::class,
+        'toggle',
+    ])->name('channels.follow');
 
-Route::post('/videos/{video}/save', [
-    SavedVideoController::class,
-    'toggle',
-])->name('videos.save');
+    Route::post('/videos/{video}/save', [
+        SavedVideoController::class,
+        'toggle',
+    ])->name('videos.save');
 
-Route::get('/saved-videos', [
-    SavedVideoController::class,
-    'index',
-])->name('saved-videos.index');
+    Route::get('/saved-videos', [
+        SavedVideoController::class,
+        'index',
+    ])->name('saved-videos.index');
 
-Route::get('/notifications', [
-    NotificationController::class,
-    'index',
-])->name('notifications.index');
+    Route::get('/notifications', [
+        NotificationController::class,
+        'index',
+    ])->name('notifications.index');
 
-Route::get('/streams/{stream}/messages', function (Stream $stream) {
+    Route::get('/streams/{stream}/messages', function (Stream $stream) {
 
-    return $stream->chatMessages()
-        ->latest()
-        ->take(50)
-        ->with('user')
-        ->get()
-        ->reverse()
-        ->values()
-        ->map(function ($message) {
+        return $stream->chatMessages()
+            ->latest()
+            ->take(50)
+            ->with('user')
+            ->get()
+            ->reverse()
+            ->values()
+            ->map(function ($message) {
 
-            return [
-                'user' => $message->user->username,
-                'message' => $message->message,
-                'time' => $message->created_at->format('H:i'),
-            ];
+                return [
+                    'user' => $message->user->username,
+                    'message' => $message->message,
+                    'time' => $message->created_at->format('H:i'),
+                ];
 
-        });
+            });
 
-});
+    });
 
-Route::post(
-    '/subscribe',
-    [SubscriptionController::class, 'store']
-)->middleware('auth');
+    Route::post(
+        '/subscribe',
+        [SubscriptionController::class, 'store']
+    )->middleware('auth');
 
     /*
     |--------------------------------------------------------------------------
@@ -165,71 +163,69 @@ Route::post(
     Route::middleware(['role:creator'])->group(function () {
 
         Route::get('/creator/videos', [
-    VideoController::class,
-    'index'
-])->name('creator.videos.index');
+            VideoController::class,
+            'index',
+        ])->name('creator.videos.index');
 
-Route::get('/creator/videos/create', [
-    VideoController::class,
-    'create'
-])->name('creator.videos.create');
+        Route::get('/creator/videos/create', [
+            VideoController::class,
+            'create',
+        ])->name('creator.videos.create');
 
-Route::post('/creator/videos', [
-    VideoController::class,
-    'store'
-])->name('creator.videos.store');
-Route::post('/creator/stream', [
-    StreamController::class,
-    'update',
-])->name('creator.stream.update');
+        Route::post('/creator/videos', [
+            VideoController::class,
+            'store',
+        ])->name('creator.videos.store');
+        Route::post('/creator/stream', [
+            StreamController::class,
+            'update',
+        ])->name('creator.stream.update');
         Route::get('/creator/dashboard', function () {
             return inertia('Creator/Dashboard');
         })->name('creator.dashboard');
 
-Route::get('/creator/stream', [
-    StreamController::class,
-    'show',
-])->name('creator.stream');
+        Route::get('/creator/stream', [
+            StreamController::class,
+            'show',
+        ])->name('creator.stream');
 
-Route::post('/creator/stream/start', [
-    StreamController::class,
-    'start',
-])->name('creator.stream.start');
+        Route::post('/creator/stream/start', [
+            StreamController::class,
+            'start',
+        ])->name('creator.stream.start');
 
-Route::post('/creator/stream/end', [
-    StreamController::class,
-    'end',
-])->name('creator.stream.end');
+        Route::post('/creator/stream/end', [
+            StreamController::class,
+            'end',
+        ])->name('creator.stream.end');
 
-Route::post('/creator/stream/ingest/start', [
-    StreamController::class,
-    'startIngest',
-]);
+        Route::post('/creator/stream/ingest/start', [
+            StreamController::class,
+            'startIngest',
+        ]);
 
-Route::post('/creator/stream/ingest/stop', [
-    StreamController::class,
-    'stopIngest',
-]);
+        Route::post('/creator/stream/ingest/stop', [
+            StreamController::class,
+            'stopIngest',
+        ]);
 
     });
 
-Route::get(
+    Route::get(
 
-    '/creator/withdrawals',
+        '/creator/withdrawals',
 
-    [WithdrawalController::class, 'index']
+        [WithdrawalController::class, 'index']
 
-)->name('creator.withdrawals');
+    )->name('creator.withdrawals');
 
-Route::post(
+    Route::post(
 
-    '/withdrawals',
+        '/withdrawals',
 
-    [WithdrawalController::class, 'store']
+        [WithdrawalController::class, 'store']
 
-)->name('withdrawals.store');
-
-
+    )->name('withdrawals.store');
 
     /*
     |--------------------------------------------------------------------------
@@ -246,16 +242,16 @@ Route::post(
     });
 
     Route::post('/creator/stream/join', [
-    StreamController::class,
-    'join',
-]);
+        StreamController::class,
+        'join',
+    ]);
 
-Route::post('/creator/stream/leave', [
-    StreamController::class,
-    'leave',
-]);
+    Route::post('/creator/stream/leave', [
+        StreamController::class,
+        'leave',
+    ]);
 
-
+    Route::get('/streams/{stream}', [StreamController::class, 'publicShow']);
 
     /*
     |--------------------------------------------------------------------------
@@ -270,8 +266,6 @@ Route::post('/creator/stream/leave', [
         })->name('admin.dashboard');
 
     });
-
-
 
 });
 

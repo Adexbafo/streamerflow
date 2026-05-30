@@ -44,6 +44,32 @@ export default function Show({
     });
     const videoRef = useRef<HTMLVideoElement>(null);
 
+    useEffect(() => {
+
+        if (!videoRef.current) return;
+
+        const video = videoRef.current;
+
+        if (Hls.isSupported()) {
+
+            const hls = new Hls();
+
+            hls.loadSource(streamConfig.hlsPlaybackUrl);
+
+            hls.attachMedia(video);
+
+            return () => {
+                hls.destroy();
+            };
+        }
+
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+
+            video.src = streamConfig.hlsPlaybackUrl;
+        }
+
+    }, []);
+
     const sendMessage = async () => {
 
         if (!chatMessage.trim()) return;
@@ -105,8 +131,6 @@ export default function Show({
 
                 ]);
 
-                console.log(user.name + ' joined');
-
             })
 
             .leaving((user: any) => {
@@ -127,8 +151,6 @@ export default function Show({
                     },
 
                 ]);
-
-                console.log(user.name + ' left');
 
             })
 
@@ -217,48 +239,33 @@ export default function Show({
 
         if (!video) return;
 
-        const streamUrl =
-            `${streamConfig.hlsPlaybackUrl}/live/${stream.stream_key}/index.m3u8`;
+        const hls = new Hls();
 
-        console.log(streamUrl);
+        hls.loadSource(streamConfig.hlsPlaybackUrl);
 
-        if (Hls.isSupported()) {
+        hls.attachMedia(video);
 
-            const hls = new Hls();
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
 
-            hls.loadSource(streamUrl);
+            video.play();
 
-            hls.attachMedia(video);
+        });
 
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        return () => {
 
-                video.play();
+            hls.destroy();
 
-            });
-
-            return () => {
-
-                hls.destroy();
-
-            };
-
-        }
-
-        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-
-            video.src = streamUrl;
-
-        }
+        };
 
     }, []);
     return (
         <AppLayout>
 
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            <div className="flex flex-col xl:grid xl:grid-cols-12 gap-6">
 
                 {/* Main Stream Area */}
 
-                <div className="2xl:col-span-8">
+                <div className="xl:col-span-8">
 
                     {/* Stream Player */}
 
@@ -287,6 +294,7 @@ export default function Show({
             "
                             />
 
+
                         </div>
 
                     </div>
@@ -295,11 +303,11 @@ export default function Show({
 
                     <div className="mb-6">
 
-                        <h1 className="text-3xl font-bold mb-2">
+                        <h1 className="text-2xl sm:text-3xl font-bold mb-2">
                             {stream.title}
                         </h1>
 
-                        <div className="flex items-center gap-4 text-gray-500">
+                        <div className="flex flex-wrap items-center gap-4 text-gray-500">
 
                             <span>
                                 🔴 LIVE
@@ -309,12 +317,21 @@ export default function Show({
                                 {viewerCount} watching
                             </span>
                             <span>
-                                {stream.category}
+                                {stream.category ?? 'Lifestyle'}
                             </span>
 
                         </div>
 
-                        <div className="flex items-center gap-4 mt-6">
+                        <div
+                            className="
+        flex
+        flex-col
+        sm:flex-row
+        sm:flex-wrap
+        gap-3
+        mt-6
+    "
+                        >
 
                             <button className="bg-black text-white px-5 py-2 rounded-xl hover:opacity-90 transition">
                                 ❤️ Like
@@ -414,7 +431,21 @@ export default function Show({
 
                     {/* Creator Section */}
 
-                    <div className="bg-white border rounded-3xl p-6 shadow-sm hover:shadow-md transition flex items-center justify-between">
+                    <div className="
+    bg-white
+    border
+    rounded-3xl
+    p-6
+    shadow-sm
+    hover:shadow-md
+    transition
+    flex
+    flex-col
+    sm:flex-row
+    gap-4
+    sm:items-center
+    sm:justify-between
+">
 
                         <div>
 
@@ -428,7 +459,7 @@ export default function Show({
 
                         </div>
 
-                        <div className="flex gap-3">
+                        <div className="flex flex-wrap gap-3">
 
                             <button
                                 className="
@@ -495,7 +526,7 @@ export default function Show({
                             Recommended Streams
                         </h2>
 
-                        <div className="grid grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
 
                             {[1, 2, 3].map((stream) => (
 
@@ -535,9 +566,27 @@ export default function Show({
 
                 {/* Live Chat Sidebar */}
 
-                <div className="2xl:col-span-4">
+                <div
+                    className="
+        xl:col-span-4
+        w-full
+    "
+                >
 
-                    <div className="border border-gray-200 rounded-3xl h-[80vh] flex flex-col bg-white shadow-sm sticky top-6">
+                    <div className="
+    border
+    border-gray-200
+    rounded-3xl
+    min-h-[500px]
+    h-[65vh]
+    xl:h-[80vh]
+    flex
+    flex-col
+    bg-white
+    shadow-sm
+    xl:sticky
+    xl:top-6
+">
 
                         {/* Chat Header */}
 
@@ -679,11 +728,24 @@ export default function Show({
 
                         <div className="p-4 border-t">
 
-                            <div className="flex gap-2">
+                            <div className="
+    flex
+    flex-col
+    sm:flex-row
+    gap-2
+">
 
                                 <input
                                     type="text"
                                     value={chatMessage}
+                                    className="
+    flex-1
+    border
+    rounded-2xl
+    px-4
+    py-3
+    text-sm
+"
                                     onChange={(e) => {
 
                                         setChatMessage(e.target.value);
@@ -702,7 +764,7 @@ export default function Show({
                                     className="
                         bg-black
                         text-white
-                        px-5
+                        w-full sm:w-auto px-5
                         rounded-2xl
                         font-semibold
                     "

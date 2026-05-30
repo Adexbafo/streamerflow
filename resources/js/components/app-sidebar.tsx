@@ -13,13 +13,60 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: dashboard(),
+        title: 'Home',
+        href: '/',
+        icon: LayoutGrid,
+    },
+
+    {
+        title: 'Trending',
+        href: '/trending',
+        icon: LayoutGrid,
+    },
+
+    {
+        title: 'Search',
+        href: '/search',
+        icon: LayoutGrid,
+    },
+
+    {
+        title: 'Notifications',
+        href: '/notifications',
+        icon: LayoutGrid,
+    },
+
+    {
+        title: 'Saved Videos',
+        href: '/saved-videos',
+        icon: LayoutGrid,
+    },
+
+    {
+        title: 'My Channel',
+        href: '/channels/adexmakai',
+        icon: LayoutGrid,
+    },
+
+    {
+        title: 'Stream Dashboard',
+        href: '/creator/stream',
+        icon: LayoutGrid,
+    },
+
+    {
+        title: 'Revenue Dashboard',
+        href: '/creator/revenue',
+        icon: LayoutGrid,
+    },
+
+    {
+        title: 'Withdrawals',
+        href: '/creator/withdrawals',
         icon: LayoutGrid,
     },
 ];
@@ -39,12 +86,12 @@ const footerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     return (
-        <Sidebar collapsible="icon" variant="inset">
+        <Sidebar variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href="/" prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

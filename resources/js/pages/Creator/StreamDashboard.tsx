@@ -147,7 +147,7 @@ export default function StreamDashboard({
                                 {status}
                             </h2>
 
-                            <div className="flex gap-4 mb-8">
+                            <div className="flex flex-wrap gap-4 mb-8">
 
                                 <button
                                     onClick={() => {
@@ -166,13 +166,15 @@ export default function StreamDashboard({
 
                                     }}
                                     className="
-            bg-red-600
-            text-white
-            px-6
-            py-3
-            rounded-2xl
-            font-bold
-        "
+    w-full
+    sm:w-auto
+    bg-red-600
+    text-white
+    px-6
+    py-3
+    rounded-2xl
+    font-bold
+"
                                 >
                                     Go Live
                                 </button>
@@ -190,31 +192,35 @@ export default function StreamDashboard({
                                         }
                                     )}
                                     className="
-            bg-gray-900
-            text-white
-            px-6
-            py-3
-            rounded-2xl
-            font-bold
-        "
+    w-full
+    sm:w-auto
+    bg-gray-900
+    text-white
+    px-6
+    py-3
+    rounded-2xl
+    font-bold
+"
                                 >
                                     End Stream
                                 </button>
 
-                                <div className="flex gap-4 mt-4">
+                                <div className="flex flex-wrap gap-4 mt-4">
 
                                     <button
                                         onClick={() =>
                                             router.post('/creator/stream/ingest/start')
                                         }
                                         className="
-            bg-green-600
-            text-white
-            px-5
-            py-2
-            rounded-2xl
-            font-bold
-        "
+    w-full
+    sm:w-auto
+    bg-green-600
+    text-white
+    px-6
+    py-3
+    rounded-2xl
+    font-bold
+"
                                     >
                                         Connect OBS
                                     </button>
@@ -224,13 +230,15 @@ export default function StreamDashboard({
                                             router.post('/creator/stream/ingest/stop')
                                         }
                                         className="
-            bg-gray-700
-            text-white
-            px-5
-            py-2
-            rounded-2xl
-            font-bold
-        "
+    w-full
+    sm:w-auto
+    bg-gray-700
+    text-white
+    px-6
+    py-3
+    rounded-2xl
+    font-bold
+"
                                     >
                                         Disconnect OBS
                                     </button>
