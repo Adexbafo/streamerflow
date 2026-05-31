@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Stream;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Notifications\StreamWentLiveNotification;
+use App\Models\User;
 
 class StreamController extends Controller
 {
@@ -31,6 +33,16 @@ class StreamController extends Controller
             'status' => 'live',
             'started_at' => now(),
         ]);
+
+        $users = User::where('id', '!=', auth()->id())->get();
+
+        foreach ($users as $user) {
+
+            $user->notify(
+                new StreamWentLiveNotification($stream)
+        );
+
+}
 
         StreamStatusUpdated::dispatch($stream);
 

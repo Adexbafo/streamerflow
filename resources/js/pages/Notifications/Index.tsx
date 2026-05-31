@@ -22,51 +22,51 @@ export default function Index({
 }: Props) {
 
     return (
-    <AppLayout>
-        <div className="max-w-4xl mx-auto p-6">
+        <AppLayout>
+            <div className="max-w-4xl mx-auto p-6">
 
-            <h1 className="text-4xl font-bold mb-10">
-                Notifications
-            </h1>
+                <h1 className="text-4xl font-bold mb-10">
+                    Notifications
+                </h1>
 
-            <div className="space-y-4">
+                <div className="space-y-4">
 
-                {notifications.data.length === 0 ? (
+                    {notifications.data.length === 0 ? (
 
-                    <div className="border rounded-lg p-6 text-gray-500">
+                        <div className="border rounded-lg p-6 text-gray-500">
 
-                        No notifications yet.
-
-                    </div>
-
-                ) : (
-
-                    notifications.data.map((notification) => (
-
-                        <div
-                            key={notification.id}
-                            className="border rounded-lg p-5"
-                        >
-
-                            <p className="font-medium">
-                                {notification.data.message}
-                            </p>
-
-                            <p className="text-sm text-gray-400 mt-2">
-                                {new Date(
-                                    notification.created_at
-                                ).toLocaleString()}
-                            </p>
+                            No notifications yet.
 
                         </div>
 
-                    ))
+                    ) : (
 
-                )}
+                        notifications.data.map((notification) => (
+
+                            <div
+                                key={notification.id}
+                                className="border rounded-lg p-5"
+                            >
+
+                                <p className="font-medium">
+                                    {notification.data.message}
+                                </p>
+
+                                <p className="text-sm text-gray-400 mt-2">
+                                    {new Date(
+                                        notification.created_at
+                                    ).toLocaleString()}
+                                </p>
+
+                            </div>
+
+                        ))
+
+                    )}
+
+                </div>
 
             </div>
-
-        </div>
         </AppLayout>
-);
+    );
 }

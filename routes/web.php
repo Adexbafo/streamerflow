@@ -128,6 +128,11 @@ Route::middleware(['auth'])->group(function () {
         'index',
     ])->name('notifications.index');
 
+    Route::post(
+        '/notifications/read-all',
+        [NotificationController::class, 'markAllAsRead']
+    )->name('notifications.read-all');
+
     Route::get('/streams/{stream}/messages', function (Stream $stream) {
 
         return $stream->chatMessages()

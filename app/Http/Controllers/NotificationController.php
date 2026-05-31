@@ -20,4 +20,13 @@ class NotificationController extends Controller
             'notifications' => $notifications,
         ]);
     }
+
+    public function markAllAsRead()
+{
+    auth()->user()
+        ->unreadNotifications
+        ->markAsRead();
+
+    return back();
+}
 }
