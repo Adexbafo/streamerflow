@@ -53,6 +53,12 @@ const mainNavItems: NavItem[] = [
     },
 
     {
+        title: 'Upload Videos',
+        href: '/creator/videos/create',
+        icon: LayoutGrid,
+    },
+
+    {
         title: 'Stream Dashboard',
         href: '/creator/stream',
         icon: LayoutGrid,

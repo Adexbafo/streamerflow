@@ -21,4 +21,27 @@ class SavedVideoController extends Controller
             'savedVideos' => $savedVideos,
         ]);
     }
+
+    public function toggle($videoId)
+{
+    $user = auth()->user();
+
+    $alreadySaved = $user->savedVideos()
+        ->where('video_id', $videoId)
+        ->exists();
+
+    if ($alreadySaved) {
+
+        $user->savedVideos()
+            ->detach($videoId);
+
+    } else {
+
+        $user->savedVideos()
+            ->attach($videoId);
+
+    }
+
+    return back();
+}
 }

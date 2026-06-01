@@ -78,6 +78,11 @@ export default function AppLayout({
                     />
 
                     <SidebarLink
+                        href="/creator/videos/create"
+                        label="Upload Videos"
+                    />
+
+                    <SidebarLink
                         href="/creator/stream"
                         label="Stream Dashboard"
                     />
