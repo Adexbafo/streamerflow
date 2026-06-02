@@ -28,7 +28,7 @@ export default function Revenue({
                         </div>
 
                         <div className="text-3xl font-bold">
-                            💰 {wallet.balance} Coins
+                            💰 {wallet?.balance ?? 0} Coins
                         </div>
 
                     </div>
@@ -40,7 +40,7 @@ export default function Revenue({
                         </div>
 
                         <div className="text-3xl font-bold">
-                            🔥 {wallet.lifetime_earned} Coins
+                            🔥 {wallet?.lifetime_earned ?? 0} Coins
                         </div>
 
                     </div>
@@ -52,7 +52,7 @@ export default function Revenue({
                         </div>
 
                         <div className="text-3xl font-bold">
-                            🎁 {recentTips.length}
+                            🎁 {recentTips?.length ?? 0}
                         </div>
 
                     </div>
@@ -73,10 +73,10 @@ export default function Revenue({
 
                         <div className="space-y-4">
 
-                            {recentTips.length === 0 ? (
+                            {recentTips?.length === 0 ? (
                                 <div className="text-gray-500 py-4 text-center">No tips received yet.</div>
                             ) : (
-                                recentTips.map((tip: any) => (
+                                recentTips?.map((tip: any) => (
                                     <div
                                         key={tip.id}
                                         className="

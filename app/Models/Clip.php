@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Stream;
+use App\Models\ClipLike;
+
 
 
 
@@ -14,7 +16,7 @@ class Clip extends Model
 
         'user_id',
 
-        'stream_id',
+        'video_id',
 
         'title',
 
@@ -36,5 +38,15 @@ class Clip extends Model
     public function stream()
     {
         return $this->belongsTo(Stream::class);
+    }
+
+    public function video()
+    {
+        return $this->belongsTo(Video::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(ClipLike::class);
     }
 }

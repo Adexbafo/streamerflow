@@ -5,75 +5,87 @@ interface Clip {
 
     title: string;
 
+    clip_path: string;
+
     thumbnail_path: string;
 
     views_count: number;
 
     likes_count: number;
 
-    created_at: string;
-
     user: {
-        username: string;
+        name: string;
     };
 }
 
-export default function ClipsIndex({
+interface Props {
+    clips: {
+        data: Clip[];
+    };
+}
+
+export default function Index({
     clips,
-}: any) {
+}: Props) {
 
     return (
 
         <AppLayout>
 
-            <div className="max-w-7xl mx-auto p-8">
+            <div className="max-w-7xl mx-auto p-6">
 
-                <h1 className="text-4xl font-bold mb-8">
+                <h1 className="text-4xl font-bold mb-10">
                     Trending Clips
                 </h1>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div
+                    className="
+                        grid
+                        grid-cols-1
+                        md:grid-cols-3
+                        gap-8
+                    "
+                >
 
-                    {clips.data.map((clip: Clip) => (
+                    {clips.data.map((clip) => (
 
                         <a
                             key={clip.id}
-                            href={`/clips-feed?clip=${clip.id}`}
+                            href={`/clips/${clip.id}`}
                             className="
-                                bg-white
+                                border
                                 rounded-2xl
                                 overflow-hidden
-                                shadow
+                                shadow-sm
                             "
                         >
 
                             <img
                                 src={`/storage/${clip.thumbnail_path}`}
+                                alt={clip.title}
                                 className="
                                     w-full
-                                    h-56
+                                    h-96
                                     object-cover
                                 "
                             />
 
                             <div className="p-4">
 
-                                <div className="font-bold text-lg">
-                                    {clip.title}
-                                </div>
+                                <h2 className="font-bold text-lg">
 
-                                <div className="text-sm text-gray-500">
-                                    @{clip.user.username}
-                                </div>
+                                    {clip.title}
+
+                                </h2>
 
                                 <div
                                     className="
                                         mt-3
+                                        text-sm
+                                        text-gray-500
                                         flex
                                         items-center
                                         justify-between
-                                        text-sm
-                                        text-gray-500
                                     "
                                 >
 
@@ -84,6 +96,18 @@ export default function ClipsIndex({
                                     <span>
                                         ❤️ {clip.likes_count}
                                     </span>
+
+                                </div>
+
+                                <div
+                                    className="
+                                        mt-2
+                                        text-sm
+                                        text-gray-400
+                                    "
+                                >
+
+                                    {clip.user.name}
 
                                 </div>
 

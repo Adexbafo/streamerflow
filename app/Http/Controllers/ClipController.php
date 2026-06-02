@@ -134,6 +134,8 @@ class ClipController extends Controller
 
             'title' => 'New Stream Clip',
 
+            'moderation_status' => 'approved',
+
             'start_time' => $validated['start_time'],
 
             'end_time' => (
@@ -156,15 +158,39 @@ class ClipController extends Controller
 
     public function index()
 {
-    $clips = Clip::with([
-        'user',
-        'stream',
-    ])
-    ->latest()
-    ->paginate(12);
-
+    $clips = Clip::where(
+    'moderation_status',
+    'approved'
+)
+->with([
+    'user',
+    'video',
+    'likes',
+])
+->withCount('likes')
+->orderByDesc('views_count')
+->orderByDesc('likes_count')
+->latest()
+->paginate(12);
     return Inertia::render(
         'Clips/Index',
+        [
+            'clips' => $clips,
+        ]
+    );
+}
+
+    public function feed()
+{
+    $clips = Clip::with([
+        'user',
+        'likes',
+    ])
+    ->latest()
+    ->paginate(20);
+
+    return Inertia::render(
+        'Clips/Feed',
         [
             'clips' => $clips,
         ]
@@ -175,12 +201,19 @@ class ClipController extends Controller
      * Show clip page.
      */
     public function show(Clip $clip)
-    {
-        return Inertia::render(
-            'Clips/Show',
-            [
-                'clip' => $clip->load('user'),
-            ]
-        );
-    }
+{
+    $clip->increment('views_count');
+
+    $clip->load([
+        'user',
+        'likes',
+    ]);
+
+    return Inertia::render(
+        'Clips/Show',
+        [
+            'clip' => $clip,
+        ]
+    );
+}
 }

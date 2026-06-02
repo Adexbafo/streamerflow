@@ -9,6 +9,10 @@ interface Clip {
 
     thumbnail_path: string;
 
+    likes?: any[];
+
+    views_count: number;
+
     created_at: string;
 
     user: {
@@ -72,6 +76,55 @@ export default function Show({
                         />
 
                     </video>
+
+                </div>
+
+                <div className="mt-4 flex items-center gap-4">
+
+                    <form
+                        method="POST"
+                        action={`/clips/${clip.id}/like`}
+                    >
+
+                        <button
+                            type="submit"
+                            className="
+                bg-red-500
+                text-white
+                px-4
+                py-2
+                rounded-xl
+            "
+                        >
+                            ❤️ {clip.likes?.length || 0} Likes
+                        </button>
+
+                    </form>
+
+                    <button
+                        onClick={() => {
+                            navigator.clipboard.writeText(
+                                window.location.href
+                            );
+
+                            alert('Clip link copied!');
+                        }}
+                        className="
+                            bg-blue-500
+                            text-white
+                            px-4
+                            py-2
+                            rounded-xl
+                        "
+                    >
+                        🔗 Share
+                    </button>
+
+                </div>
+
+                <div className="mt-4 text-gray-500">
+
+                    👁️ {clip.views_count} views
 
                 </div>
 

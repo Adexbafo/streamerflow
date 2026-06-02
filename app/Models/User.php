@@ -179,4 +179,11 @@ public function subscribers()
         'creator_id'
     );
 }
+public function likedClips()
+{
+    return $this->belongsToMany(
+        Clip::class,
+        'clip_likes'
+    );
+}
 }

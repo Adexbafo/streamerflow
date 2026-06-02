@@ -78,7 +78,7 @@ export default function Withdrawals({
                     </div>
 
                     <div className="text-4xl font-bold">
-                        💰 {wallet.balance} Coins
+                        💰 {wallet?.balance ?? 0} Coins
                     </div>
 
                 </div>
@@ -218,55 +218,65 @@ export default function Withdrawals({
 
                     <div className="space-y-4">
 
-                        {withdrawals.map((item: any) => (
+                        {withdrawals?.length === 0 ? (
 
-                            <div
-                                key={item.id}
-                                className="
-                                    flex
-                                    items-center
-                                    justify-between
-                                    border-b
-                                    pb-4
-                                "
-                            >
-
-                                <div>
-
-                                    <div className="font-bold">
-                                        {item.bank_name}
-                                    </div>
-
-                                    <div className="text-sm text-gray-500">
-                                        {item.account_number}
-                                    </div>
-
-                                </div>
-
-                                <div className="text-right">
-
-                                    <div className="font-bold">
-                                        {item.amount} Coins
-                                    </div>
-
-                                    <div
-                                        className={`
-                                            text-sm
-                                            font-bold
-                                            ${item.status === 'completed'
-                                                ? 'text-green-600'
-                                                : 'text-yellow-600'
-                                            }
-                                        `}
-                                    >
-                                        {item.status}
-                                    </div>
-
-                                </div>
-
+                            <div className="text-gray-500 text-center py-6">
+                                No withdrawals yet.
                             </div>
 
-                        ))}
+                        ) : (
+
+                            withdrawals?.map((item: any) => (
+
+                                <div
+                                    key={item.id}
+                                    className="
+                flex
+                items-center
+                justify-between
+                border-b
+                pb-4
+            "
+                                >
+
+                                    <div>
+
+                                        <div className="font-bold">
+                                            {item.bank_name}
+                                        </div>
+
+                                        <div className="text-sm text-gray-500">
+                                            {item.account_number}
+                                        </div>
+
+                                    </div>
+
+                                    <div className="text-right">
+
+                                        <div className="font-bold">
+                                            {item.amount} Coins
+                                        </div>
+
+                                        <div
+                                            className={`
+                        text-sm
+                        font-bold
+                        ${item.status === 'completed'
+                                                    ? 'text-green-600'
+                                                    : 'text-yellow-600'
+                                                }
+                    `}
+                                        >
+                                            {item.status}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            ))
+
+                        )}
 
                     </div>
 

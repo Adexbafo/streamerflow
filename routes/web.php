@@ -20,6 +20,7 @@ use App\Http\Controllers\WithdrawalController;
 use App\Models\Stream;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClipController;
+use App\Http\Controllers\ClipLikeController;
 
 
 Route::get('/', function () {
@@ -88,6 +89,21 @@ Route::middleware(['auth'])->group(function () {
         '/clips/{clip}',
         [ClipController::class, 'show']
     )->name('clips.show');
+
+    Route::get(
+    '/trending-clips',
+    [ClipController::class, 'index']
+)->name('clips.index');
+
+        Route::get(
+    '/clips-feed',
+    [ClipController::class, 'feed']
+);
+
+    Route::post(
+        '/clips/{clip}/like',
+        [ClipLikeController::class, 'toggle']
+    )->middleware('auth');
 
     Route::get('/creator/revenue', [
 
