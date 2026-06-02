@@ -19,6 +19,8 @@ use App\Http\Controllers\VideoWatchController;
 use App\Http\Controllers\WithdrawalController;
 use App\Models\Stream;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClipController;
+
 
 Route::get('/', function () {
 
@@ -70,7 +72,22 @@ Route::get('/streams/{stream:slug}', function (Stream $stream) {
 
 });
 
+Route::get(
+    '/clips',
+    [ClipController::class, 'index']
+)->name('clips.index');
+
 Route::middleware(['auth'])->group(function () {
+
+    Route::post(
+        '/clips/create',
+        [ClipController::class, 'store']
+    )->name('clips.store');
+
+    Route::get(
+        '/clips/{clip}',
+        [ClipController::class, 'show']
+    )->name('clips.show');
 
     Route::get('/creator/revenue', [
 

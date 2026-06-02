@@ -75,6 +75,12 @@ const mainNavItems: NavItem[] = [
         href: '/creator/withdrawals',
         icon: LayoutGrid,
     },
+
+    {
+        title: 'Trending Clips',
+        href: '/clips',
+        icon: LayoutGrid,
+    },
 ];
 
 const footerNavItems: NavItem[] = [

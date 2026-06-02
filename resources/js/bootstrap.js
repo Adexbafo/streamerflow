@@ -1,36 +1,44 @@
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
-window.Pusher = Pusher;
+if (typeof window !== 'undefined') {
 
-window.Echo = new Echo({
+    window.Pusher = Pusher;
 
-    broadcaster: 'reverb',
+    window.Echo = new Echo({
 
-    key: import.meta.env.VITE_REVERB_APP_KEY,
+        broadcaster: 'reverb',
 
-    wsHost: import.meta.env.VITE_REVERB_HOST,
+        key: import.meta.env.VITE_REVERB_APP_KEY,
 
-    wsPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
+        wsHost: import.meta.env.VITE_REVERB_HOST,
 
-    wssPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
+        wsPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
 
-    forceTLS: false,
+        wssPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
 
-    enabledTransports: ['ws', 'wss'],
+        forceTLS: false,
 
-});
+        enabledTransports: ['ws', 'wss'],
+
+    });
+
+}
 
 import { initializeRealtimeNotifications }
     from './realtime-notifications';
 
-const userMeta = document
-    .querySelector('meta[name="user-id"]');
+if (typeof document !== 'undefined') {
 
-if (userMeta) {
+    const userMeta = document
+        .querySelector('meta[name="user-id"]');
 
-    initializeRealtimeNotifications(
-        Number(userMeta.getAttribute('content'))
-    );
+    if (userMeta) {
+
+        initializeRealtimeNotifications(
+            Number(userMeta.getAttribute('content'))
+        );
+
+    }
 
 }

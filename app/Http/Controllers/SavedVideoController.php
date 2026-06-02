@@ -13,7 +13,7 @@ class SavedVideoController extends Controller
     {
         $savedVideos = auth()->user()
             ->savedVideos()
-            ->with('video.user')
+            ->with('user')
             ->latest()
             ->paginate(20);
 

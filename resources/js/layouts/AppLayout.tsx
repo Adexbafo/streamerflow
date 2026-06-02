@@ -97,6 +97,11 @@ export default function AppLayout({
                         label="Withdrawals"
                     />
 
+                    <SidebarLink
+                        href="/clips"
+                        label="Trending Clips"
+                    />
+
                 </div>
 
             </div>

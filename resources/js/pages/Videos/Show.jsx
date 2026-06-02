@@ -1,6 +1,7 @@
 export default function Show({ video }) {
 
     return (
+
         <div className="max-w-6xl mx-auto p-6">
 
             {/* Video Player */}
@@ -11,6 +12,7 @@ export default function Show({ video }) {
                     controls
                     className="w-full rounded-lg"
                 >
+
                     <source
                         src={`/storage/${video.video_path}`}
                         type="video/mp4"
@@ -24,63 +26,97 @@ export default function Show({ video }) {
 
             {/* Video Metadata */}
 
-<div className="mb-6">
+            <div className="mb-6">
 
-    <h1 className="text-3xl font-bold mb-2">
-        {video.title}
-    </h1>
+                <h1 className="text-3xl font-bold mb-2">
+                    {video.title}
+                </h1>
 
-    <div className="flex items-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center gap-4 text-sm text-gray-500">
 
-        <span>
-            {video.views_count} views
-        </span>
+                    <span>
+                        {video.views_count} views
+                    </span>
 
-        <span>
-            {video.category?.name}
-        </span>
+                    <span>
+                        {video.category?.name}
+                    </span>
 
-    </div>
+                </div>
 
-    {/* Like Button */}
+                {/* Action Buttons */}
 
-    <div className="mt-4">
+                <div className="mt-4 flex gap-3 flex-wrap">
 
-        <form
-            method="POST"
-            action={`/videos/${video.id}/like`}
-        >
+                    {/* Like Button */}
 
-            <button
-                type="submit"
-                className="bg-red-500 text-white px-4 py-2 rounded"
-            >
-                ❤️ {video.likes?.length || 0} Likes
-            </button>
+                    <form
+                        method="POST"
+                        action={`/videos/${video.id}/like`}
+                    >
 
-            <div className="mt-3">
+                        <button
+                            type="submit"
+                            className="bg-red-500 text-white px-4 py-2 rounded"
+                        >
+                            ❤️ {video.likes?.length || 0} Likes
+                        </button>
 
-    <form
-        method="POST"
-        action={`/videos/${video.id}/save`}
-    >
+                    </form>
 
-        <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-            💾 Save Video
-        </button>
+                    {/* Save Button */}
 
-    </form>
+                    <form
+                        method="POST"
+                        action={`/videos/${video.id}/save`}
+                    >
 
-</div>
+                        <button
+                            type="submit"
+                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                        >
+                            💾 Save Video
+                        </button>
 
-        </form>
+                    </form>
 
-    </div>
+                    {/* Clip Button */}
 
-</div>
+                    <form
+                        method="POST"
+                        action="/clips/create"
+                    >
+
+                        <input
+                            type="hidden"
+                            name="video_id"
+                            value={video.id}
+                        />
+
+                        <input
+                            type="hidden"
+                            name="start_time"
+                            value="0"
+                        />
+
+                        <input
+                            type="hidden"
+                            name="duration"
+                            value="15"
+                        />
+
+                        <button
+                            type="submit"
+                            className="bg-purple-600 text-white px-4 py-2 rounded"
+                        >
+                            🎬 Clip Video
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
 
             {/* Creator Information */}
 
@@ -108,69 +144,69 @@ export default function Show({ video }) {
 
             {/* Comments */}
 
-<div className="mt-10">
+            <div className="mt-10">
 
-    <h2 className="text-2xl font-bold mb-6">
-        Comments
-    </h2>
+                <h2 className="text-2xl font-bold mb-6">
+                    Comments
+                </h2>
 
-    {/* Comment Form */}
+                {/* Comment Form */}
 
-    <form
-        method="POST"
-        action={`/videos/${video.id}/comments`}
-        className="mb-8"
-    >
+                <form
+                    method="POST"
+                    action={`/videos/${video.id}/comments`}
+                    className="mb-8"
+                >
 
-        <textarea
-            name="body"
-            placeholder="Write a comment..."
-            className="border p-3 w-full rounded-lg"
-            rows={4}
-        />
+                    <textarea
+                        name="body"
+                        placeholder="Write a comment..."
+                        className="border p-3 w-full rounded-lg"
+                        rows={4}
+                    />
 
-        <button
-            type="submit"
-            className="bg-black text-white px-5 py-2 rounded mt-3"
-        >
-            Post Comment
-        </button>
+                    <button
+                        type="submit"
+                        className="bg-black text-white px-5 py-2 rounded mt-3"
+                    >
+                        Post Comment
+                    </button>
 
-    </form>
+                </form>
 
-    {/* Comment List */}
+                {/* Comment List */}
 
-    <div className="space-y-6">
+                <div className="space-y-6">
 
-        {video.comments?.map((comment) => (
+                    {video.comments?.map((comment) => (
 
-            <div
-                key={comment.id}
-                className="border-b pb-4"
-            >
+                        <div
+                            key={comment.id}
+                            className="border-b pb-4"
+                        >
 
-                <h3 className="font-bold">
-                    {comment.user?.name}
-                </h3>
+                            <h3 className="font-bold">
+                                {comment.user?.name}
+                            </h3>
 
-                <p className="text-gray-600 text-sm mb-2">
-                    @{comment.user?.username}
-                </p>
+                            <p className="text-gray-600 text-sm mb-2">
+                                @{comment.user?.username}
+                            </p>
 
-                <p>
-                    {comment.body}
-                </p>
+                            <p>
+                                {comment.body}
+                            </p>
+
+                        </div>
+
+                    ))}
+
+                </div>
 
             </div>
 
-        ))}
-
-    </div>
-
-</div>
-
         </div>
 
-        
     );
+
 }

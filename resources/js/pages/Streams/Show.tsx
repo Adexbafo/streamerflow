@@ -29,6 +29,12 @@ export default function Show({
     const [activities, setActivities] = useState<any[]>([]);
     const [typingUsers, setTypingUsers] = useState<string[]>([]);
     const [showTipBox, setShowTipBox] = useState(false);
+    const [clipDuration, setClipDuration] =
+        useState(30);
+
+    const [isCreatingClip, setIsCreatingClip] =
+        useState(false);
+
     const { flash } = usePage().props as any;
 
     const {
@@ -419,9 +425,103 @@ export default function Show({
                                 📤 Share
                             </button>
 
-                            <button className="border px-5 py-2 rounded-xl hover:bg-gray-100 transition">
-                                ✂️ Clip
-                            </button>
+                            <div className="flex items-center gap-3">
+
+                                <select
+                                    value={clipDuration}
+                                    onChange={(e) =>
+                                        setClipDuration(
+                                            Number(e.target.value)
+                                        )
+                                    }
+                                    className="
+            border
+            rounded-xl
+            px-4
+            py-2
+        "
+                                >
+
+                                    <option value={15}>
+                                        15s
+                                    </option>
+
+                                    <option value={30}>
+                                        30s
+                                    </option>
+
+                                    <option value={60}>
+                                        60s
+                                    </option>
+
+                                </select>
+
+                                <button
+                                    disabled={isCreatingClip}
+                                    onClick={() => {
+
+                                        setIsCreatingClip(true);
+
+                                        router.post(
+                                            '/clips/create',
+                                            {
+
+                                                stream_id: stream.id,
+
+                                                start_time: 0,
+
+                                                duration: clipDuration,
+
+                                            },
+                                            {
+
+                                                preserveScroll: true,
+
+                                                onSuccess: () => {
+
+                                                    toast.success(
+                                                        'Clip created successfully!'
+                                                    );
+
+                                                },
+
+                                                onError: () => {
+
+                                                    toast.error(
+                                                        'Failed to create clip.'
+                                                    );
+
+                                                },
+
+                                                onFinish: () => {
+
+                                                    setIsCreatingClip(false);
+
+                                                },
+
+                                            }
+                                        );
+
+                                    }}
+                                    className="
+            bg-red-600
+            hover:bg-red-700
+            text-white
+            px-5
+            py-2
+            rounded-xl
+            font-semibold
+            transition
+        "
+                                >
+
+                                    {isCreatingClip
+                                        ? 'Creating...'
+                                        : '🎬 Clip'}
+
+                                </button>
+
+                            </div>
 
                         </div>
 

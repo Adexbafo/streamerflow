@@ -18,6 +18,8 @@ use App\Models\Transaction;
 use App\Models\Tip;
 use App\Models\Withdrawal;
 use App\Models\Subscription;
+use App\Models\Video;
+
 
 
 class User extends Authenticatable
@@ -125,7 +127,10 @@ public function watchHistory()
 }
 public function savedVideos()
 {
-    return $this->hasMany(SavedVideo::class);
+    return $this->belongsToMany(
+        Video::class,
+        'saved_videos'
+    )->withTimestamps();
 }
 public function stream()
 {
