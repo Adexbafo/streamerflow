@@ -21,6 +21,7 @@ use App\Models\Stream;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClipController;
 use App\Http\Controllers\ClipLikeController;
+use App\Http\Controllers\ClipCommentController;
 
 
 Route::get('/', function () {
@@ -77,6 +78,16 @@ Route::get(
     '/clips',
     [ClipController::class, 'index']
 )->name('clips.index');
+
+Route::post(
+    '/clips/{clip}/comments',
+    [ClipCommentController::class, 'store']
+)->middleware('auth');
+
+Route::post(
+    '/users/{user}/follow',
+    [FollowController::class, 'toggle']
+)->middleware('auth');
 
 Route::middleware(['auth'])->group(function () {
 

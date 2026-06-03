@@ -2,39 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Follow;
 use App\Models\User;
-use App\Notifications\NewFollowerNotification;
 
 class FollowController extends Controller
 {
-    /**
-     * Toggle creator follow.
-     */
     public function toggle(User $user)
     {
-        if (auth()->id() === $user->id) {
+        $authUser = auth()->user();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Prevent self-follow
+        |--------------------------------------------------------------------------
+        */
+
+        if ($authUser->id === $user->id) {
+
             return back();
+
         }
 
-        $existingFollow = Follow::where('follower_id', auth()->id())
-            ->where('following_id', $user->id)
-            ->first();
+        if (
+            $authUser->following()
+                ->where('following_id', $user->id)
+                ->exists()
+        ) {
 
-        if ($existingFollow) {
-
-            $existingFollow->delete();
+            $authUser->following()
+                ->detach($user->id);
 
         } else {
 
-            Follow::create([
-                'follower_id' => auth()->id(),
-                'following_id' => $user->id,
-            ]);
-
-            $user->notify(
-                new NewFollowerNotification(auth()->user())
-            );
+            $authUser->following()
+                ->attach($user->id);
 
         }
 

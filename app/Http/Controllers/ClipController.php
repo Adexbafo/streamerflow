@@ -205,15 +205,24 @@ class ClipController extends Controller
     $clip->increment('views_count');
 
     $clip->load([
-        'user',
-        'likes',
-    ]);
+    'user.followers',
+    'user.following',
+    'likes',
+    'comments.user',
+]);
+
+    $isFollowing = auth()->user()
+    ->following()
+    ->where('following_id', $clip->user->id)
+    ->exists();
 
     return Inertia::render(
         'Clips/Show',
         [
             'clip' => $clip,
+            'isFollowing' => $isFollowing,
         ]
+        
     );
 }
 }

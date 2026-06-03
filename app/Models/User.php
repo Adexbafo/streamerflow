@@ -19,6 +19,7 @@ use App\Models\Tip;
 use App\Models\Withdrawal;
 use App\Models\Subscription;
 use App\Models\Video;
+use App\Models\ClipComment;
 
 
 
@@ -114,16 +115,22 @@ public function likes()
 }
 public function followers()
 {
-    return $this->hasMany(Follow::class, 'following_id');
+    return $this->belongsToMany(
+        User::class,
+        'follows',
+        'following_id',
+        'follower_id'
+    );
 }
 
 public function following()
 {
-    return $this->hasMany(Follow::class, 'follower_id');
-}
-public function watchHistory()
-{
-    return $this->hasMany(WatchHistory::class);
+    return $this->belongsToMany(
+        User::class,
+        'follows',
+        'follower_id',
+        'following_id'
+    );
 }
 public function savedVideos()
 {
@@ -184,6 +191,12 @@ public function likedClips()
     return $this->belongsToMany(
         Clip::class,
         'clip_likes'
+    );
+}
+public function clipComments()
+{
+    return $this->hasMany(
+        ClipComment::class
     );
 }
 }

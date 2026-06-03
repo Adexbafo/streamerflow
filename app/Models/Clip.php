@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Stream;
 use App\Models\ClipLike;
-
-
-
+use App\Models\ClipComment;
 
 class Clip extends Model
 {
@@ -48,5 +46,11 @@ class Clip extends Model
     public function likes()
     {
         return $this->hasMany(ClipLike::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(ClipComment::class)
+            ->latest();
     }
 }

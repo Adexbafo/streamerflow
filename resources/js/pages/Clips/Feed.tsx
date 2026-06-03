@@ -1,4 +1,5 @@
 import AppLayout from '@/layouts/AppLayout';
+import { useEffect } from 'react';
 
 interface Clip {
     id: number;
@@ -28,6 +29,33 @@ export default function Feed({
     clips,
 }: Props) {
 
+    useEffect(() => {
+
+        const params = new URLSearchParams(
+            window.location.search
+        );
+
+        const clipId = params.get('clip');
+
+        if (clipId) {
+
+            const element = document.getElementById(
+                `clip-${clipId}`
+            );
+
+            if (element) {
+
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                });
+
+            }
+
+        }
+
+    }, []);
+
     return (
 
         <AppLayout>
@@ -44,6 +72,7 @@ export default function Feed({
                 {clips.data.map((clip) => (
 
                     <div
+                        id={`clip-${clip.id}`}
                         key={clip.id}
                         className="
                             h-screen
@@ -146,23 +175,22 @@ export default function Feed({
                                     onClick={() => {
 
                                         navigator.clipboard.writeText(
-                                            `${window.location.origin}/clips/${clip.id}`
+                                            window.location.href
                                         );
 
-                                        alert('Clip copied!');
+                                        alert('Link copied!');
+
                                     }}
                                     className="
-            flex
-            flex-col
-            items-center
-            text-2xl
-        "
+        bg-white/20
+        text-white
+        px-4
+        py-2
+        rounded-xl
+    "
                                 >
-                                    🔗
 
-                                    <span className="text-sm">
-                                        Share
-                                    </span>
+                                    🔗 Share
 
                                 </button>
 
