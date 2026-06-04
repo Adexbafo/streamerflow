@@ -12,10 +12,16 @@ class ChatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'message' => ['required', 'string', 'max:500'],
-        ]);
 
-        $stream = Stream::findOrFail(1);
+    'stream_id' => ['required', 'exists:streams,id'],
+
+    'message' => ['required', 'string', 'max:500'],
+
+]);
+
+$stream = Stream::findOrFail(
+    $request->stream_id
+);
 
         $chatMessage = ChatMessage::create([
             'user_id' => auth()->id(),

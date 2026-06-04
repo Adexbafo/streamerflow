@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use App\Models\Stream;
 use Inertia\Inertia;
+
+
 
 class HomeController extends Controller
 {
@@ -16,8 +19,17 @@ class HomeController extends Controller
             ->latest()
             ->get();
 
+        $liveStreams = Stream::with('user')
+            ->where('status', 'live')
+            ->latest()
+            ->get();
+
         return Inertia::render('Home', [
-            'videos' => $videos,
-        ]);
+
+    'videos' => $videos,
+
+    'liveStreams' => $liveStreams,
+
+]);
     }
 }

@@ -39,8 +39,9 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
 
             'walletBalance' => fn () => auth()->check()
-                ? auth()->user()->wallet?->balance
-                : 0,
+                    ? auth()->user()->fresh()->wallet?->balance
+                    : 0,
+
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),

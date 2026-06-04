@@ -88,6 +88,16 @@ class User extends Authenticatable
 
 ]);
 
+    Wallet::create([
+
+    'user_id' => $user->id,
+
+    'balance' => 1000,
+
+    'lifetime_earned' => 0,
+
+]);
+
     });
 }
 

@@ -58,7 +58,7 @@ Route::get('/streams/{stream:slug}', function (Stream $stream) {
 
     $stream->load('user');
 
-    return inertia('Streams/Show', [
+    return inertia('Streams/PublicShow', [
 
         'stream' => $stream,
 
@@ -128,7 +128,10 @@ Route::middleware(['auth'])->group(function () {
         'store',
     ])->name('comments.store');
 
-    Route::get('/streams/{stream}', [StreamController::class, 'show']);
+    Route::get(
+    '/streams/{stream:slug}',
+    [StreamController::class, 'publicShow']
+);
 
     Route::post('/chat/send', [
         ChatController::class,
@@ -299,8 +302,6 @@ Route::middleware(['auth'])->group(function () {
         StreamController::class,
         'leave',
     ]);
-
-    Route::get('/streams/{stream}', [StreamController::class, 'publicShow']);
 
     /*
     |--------------------------------------------------------------------------

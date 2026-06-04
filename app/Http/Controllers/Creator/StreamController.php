@@ -18,7 +18,7 @@ class StreamController extends Controller
      */
     public function show()
     {
-        $stream = Stream::first();
+        $stream = auth()->user()->stream;
 
         return Inertia::render('Creator/StreamDashboard', [
             'stream' => $stream,
@@ -65,7 +65,7 @@ class StreamController extends Controller
 
     public function update(Request $request)
     {
-        $stream = Stream::first();
+        $stream = auth()->user()->stream;
 
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -88,38 +88,39 @@ class StreamController extends Controller
         return redirect()->back();
     }
 
-    public function join()
-    {
-        $stream = auth()->user()->stream;
+    public function join(Request $request)
+{
+    $stream = Stream::findOrFail(
+        $request->stream_id
+    );
 
-        $stream->increment('viewer_count');
+    $stream->increment('viewers_count');
 
-        broadcast(new ViewerCountUpdated($stream))->toOthers();
+    return response()->json([
+        'viewers' => $stream->viewers_count,
+    ]);
+}
 
-        return response()->json([
-            'viewer_count' => $stream->viewer_count,
-        ]);
+    public function leave(Request $request)
+{
+    $stream = Stream::findOrFail(
+        $request->stream_id
+    );
+
+    if ($stream->viewers_count > 0) {
+
+        $stream->decrement('viewers_count');
+
     }
 
-    public function leave()
-    {
-        $stream = auth()->user()->stream;
-
-        if ($stream->viewer_count > 0) {
-            $stream->decrement('viewer_count');
-        }
-
-        broadcast(new ViewerCountUpdated($stream))->toOthers();
-
-        return response()->json([
-            'viewer_count' => $stream->viewer_count,
-        ]);
-    }
+    return response()->json([
+        'viewers' => $stream->viewers_count,
+    ]);
+}
 
     public function startIngest()
     {
-        $stream = Stream::first();
-
+        $stream = auth()->user()->stream;
         $stream->update([
 
             'is_ingesting' => true,
@@ -135,7 +136,7 @@ class StreamController extends Controller
 
     public function stopIngest()
     {
-        $stream = Stream::first();
+        $stream = auth()->user()->stream;
 
         $stream->update([
 
@@ -149,15 +150,15 @@ class StreamController extends Controller
     }
 
     public function publicShow(Stream $stream)
-    {
-        $stream->load('user');
+{
+    $stream->load('user');
 
-        return Inertia::render('Streams/Show', [
-            'stream' => $stream,
-            'streamConfig' => [
-                'hlsPlaybackUrl' =>
-                'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-            ],
-        ]);
-    }
+    return Inertia::render('Streams/PublicShow', [
+        'stream' => $stream,
+        'streamConfig' => [
+            'hlsPlaybackUrl' =>
+            'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+        ],
+    ]);
+}
 }
