@@ -12,7 +12,7 @@ export default function AppLayout({
 
     const pageProps = usePage().props as any;
 
-    console.log(pageProps);
+
 
     const {
         auth,

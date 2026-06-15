@@ -5,6 +5,7 @@ import axios from 'axios';
 import Hls from 'hls.js';
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
+import '@/echo';
 
 
 
@@ -88,6 +89,39 @@ export default function PublicShow() {
         };
 
     }, []);
+
+    useEffect(() => {
+
+        if (!window.Echo) return;
+
+        const channel = window.Echo.join(
+            `stream.${stream.id}`
+        );
+
+        channel.listen(
+            '.chat.message.sent',
+            (event: any) => {
+
+                console.log(
+                    'REALTIME EVENT RECEIVED',
+                    JSON.stringify(event, null, 2)
+                );
+
+                setMessages((prev) => [
+                    ...prev,
+                    event.message,
+                ]);
+            }
+        );
+        return () => {
+
+            window.Echo.leave(
+                `stream.${stream.id}`
+            );
+
+        };
+
+    }, [stream.id]);
 
     return (
 

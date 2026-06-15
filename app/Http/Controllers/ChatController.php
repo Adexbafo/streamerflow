@@ -37,7 +37,12 @@ $stream = Stream::findOrFail(
             'time' => $chatMessage->created_at->format('H:i'),
         ];
 
-        broadcast(new ChatMessageSent($payload))->toOthers();
+        broadcast(
+            new ChatMessageSent(
+                $payload,
+                $stream->id
+            )
+        )->toOthers();
 
         return response()->json([
             'message' => $payload,
